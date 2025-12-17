@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Toolbox Hub</title>
+
 <style>
 /* ===== Body & Background ===== */
 body {
@@ -12,8 +13,8 @@ body {
     padding: 0;
     background: linear-gradient(135deg, #e0f7fa, #f4f7f6);
     display: flex;
-    justify-content: center;
-    align-items: flex-start;
+    flex-direction: column;
+    align-items: center;
     min-height: 100vh;
 }
 
@@ -21,7 +22,7 @@ body {
 .container {
     width: 95%;
     max-width: 650px;
-    margin: 50px auto;
+    margin: 50px auto 20px;
     padding: 40px 30px;
     border-radius: 20px;
     background-color: #ffffffcc;
@@ -67,6 +68,15 @@ h1 {
     box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
+/* ===== Footer ===== */
+footer {
+    margin-top: auto;
+    padding: 15px 0 25px;
+    font-size: 14px;
+    color: #555;
+    text-align: center;
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 500px) {
     .link-list {
@@ -76,6 +86,7 @@ h1 {
 }
 </style>
 </head>
+
 <body>
 
 <div class="container">
@@ -89,6 +100,10 @@ h1 {
         <a href="clock.html">⌚ Digital Clock</a>
     </div>
 </div>
+
+<footer>
+    Developed by <strong>Mohak Choubey</strong>
+</footer>
 
 </body>
 </html>
