@@ -1,0 +1,27 @@
+/* Back Button Styling */
+.back-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px; /* Positioned on the opposite side of Refresh */
+    background: var(--glass);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 10px 18px;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    backdrop-filter: blur(10px);
+    transition: 0.3s;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.back-btn:hover {
+    background: rgba(255,255,255,0.2);
+    transform: translateX(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
