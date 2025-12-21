@@ -88,7 +88,7 @@
         /* ===== Container ===== */
         .container {
             width: 95%;
-            max-width: 700px;
+            max-width: 750px; /* Slightly wider to accommodate more tools */
             margin-top: 80px;
             padding: 40px 30px;
             border-radius: 22px;
@@ -109,7 +109,7 @@
             font-weight: 800;
         }
 
-        /* ===== Tools ===== */
+        /* ===== Tools Grid ===== */
         .link-list {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -125,10 +125,14 @@
             background: linear-gradient(135deg, var(--btn1), var(--btn2));
             box-shadow: 0 10px 25px rgba(0,0,0,0.25);
             transition: transform 0.3s, box-shadow 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
         .link-list a span {
             display: inline-block;
-            margin-right: 8px;
+            margin-right: 10px;
+            font-size: 1.4rem;
             transition: transform 0.3s;
         }
         .link-list a:hover {
@@ -141,7 +145,7 @@
 
         /* ===== Footer ===== */
         footer {
-            margin-top: auto;
+            margin-top: 40px;
             padding: 20px;
             color: var(--text);
             opacity: 0.8;
@@ -176,6 +180,9 @@
         <a href="calculator.html" onclick="handleNav(event, 'calculator.html')"><span>🧮</span>Calculator</a>
         <a href="calendar.html" onclick="handleNav(event, 'calendar.html')"><span>🗓️</span>Calendar</a>
         <a href="clock.html" onclick="handleNav(event, 'clock.html')"><span>⌚</span>Digital Clock</a>
+        
+        <a href="qr.html" onclick="handleNav(event, 'qr.html')"><span>🔍</span>QR Suite</a>
+        <a href="speech.html" onclick="handleNav(event, 'speech.html')"><span>🎙️</span>Text to Speech</a>
     </div>
 </div>
 
@@ -201,7 +208,6 @@
         themeBtn.innerText = isDark ? "☀️" : "🌙";
     }
 
-    // Apply saved theme on load
     if (localStorage.getItem("mode") === "true") {
         document.body.classList.add("dark");
         themeBtn.innerText = "☀️";
@@ -209,12 +215,10 @@
 
     /* Sound and Navigation logic */
     function handleNav(event, url) {
-        event.preventDefault(); // Stop immediate navigation
+        event.preventDefault();
         const sound = document.getElementById("clickSound");
-        
         sound.play();
         
-        // Navigate after a short delay so the user hears the click
         setTimeout(() => {
             window.location.href = url;
         }, 150); 
