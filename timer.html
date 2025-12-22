@@ -1,285 +1,362 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Responsive Timer with Music Selector</title>
-<style>
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    text-align: center;
-    background: #f0f0f0;
-    color: #000;
-}
-
-h1 {
-    font-size: 60px;
-    margin-bottom: 20px;
-    word-break: break-word;
-}
-
-.timer-container {
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 20px;
-}
-
-input, select, button {
-    font-size: 18px;
-    padding: 10px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-button {
-    background: linear-gradient(45deg,#1d4ed8,#3b82f6);
-    color: white;
-    cursor: pointer;
-    transition: 0.2s;
-}
-
-button:hover {
-    background: linear-gradient(45deg,#3b82f6,#60a5fa);
-}
-
-.music-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 15px;
-    flex-wrap: wrap;
-}
-
-.music-container button, .music-container select {
-    padding: 5px 12px;
-    font-size: 14px;
-}
-
-.music-name {
-    font-size: 16px;
-    font-weight: bold;
-}
-
-/* New Style for Navigation */
-.back-btn {
-    background: #6c757d;
-    margin-top: 15px;
-}
-.back-btn:hover {
-    background: #5a6268;
-}
-.back-btn-container {
-    margin-top: 20px;
-}
-
-
-/* Tablet */
-@media (max-width: 1024px) {
-    h1 { font-size: 50px; }
-    input, select, button { font-size: 16px; padding: 8px; }
-    .music-name { font-size: 14px; }
-}
-
-/* Mobile */
-@media (max-width: 600px) {
-    h1 { font-size: 36px; }
-    .timer-container { flex-direction: column; gap: 10px; }
-    input, select, button { font-size: 14px; padding: 6px; width: 80%; max-width: 200px; }
-    .music-container { flex-direction: column; gap: 8px; }
-    .music-name { font-size: 14px; }
-    button { width: 120px; }
-    .back-btn { width: 80%; max-width: 200px; }
-}
-</style>
-</head>
-<body>
-
-<h1 id="display">00:00:00</h1>
-
-<div class="timer-container">
-    <input type="number" id="timeInput" min="0" placeholder="0">
-    <select id="timeUnit">
-        <option value="seconds">Seconds</option>
-        <option value="minutes">Minutes</option>
-        <option value="hours">Hours</option>
-    </select>
-    <button id="startStopBtn">Start</button>
-    <button onclick="resetTimer()">Reset</button>
-</div>
-
-<div class="music-container">
-    <span class="music-name">Select Song:</span>
-    <select id="songSelect">
-        <option value="">-- Choose a Song --</option>
-        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">Lo-Fi Study Beats</option>
-        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3">Soft Piano Loop</option>
-        <option value="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3">Ambient Chill</option>
-        <option value="upload">Upload Your Own</option>
-    </select>
-    <input type="file" id="uploadSong" accept="audio/*" style="display:none;">
-    <button id="musicToggle">Play/Pause Music</button>
-</div>
-
-<div class="back-btn-container">
-    <a href="index.html"><button class="back-btn">← Back to Tools Hub</button></a>
-</div>
-
-<audio id="timerAudio"></audio>
-
-<audio id="beepAudio" src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg"></audio>
-
-<script>
-let time = 0;
-let interval = null;
-let isRunning = false;
-
-const display = document.getElementById("display");
-const input = document.getElementById("timeInput");
-const unit = document.getElementById("timeUnit");
-const startStopBtn = document.getElementById("startStopBtn");
-const audio = document.getElementById("timerAudio");
-const musicToggle = document.getElementById("musicToggle");
-const songSelect = document.getElementById("songSelect");
-const uploadInput = document.getElementById("uploadSong");
-const beepAudio = document.getElementById("beepAudio");
-
-function updateDisplay() {
-    let h = Math.floor(time / 3600);
-    let m = Math.floor((time % 3600) / 60);
-    let s = time % 60;
-    display.innerText = 
-        String(h).padStart(2,'0') + ':' +
-        String(m).padStart(2,'0') + ':' +
-        String(s).padStart(2,'0');
-}
-
-function startStopTimer() {
-    if(!isRunning){
-        let val = parseInt(input.value);
-        if(isNaN(val) || val <=0) return;
-
-        if(unit.value === 'minutes') val *= 60;
-        else if(unit.value === 'hours') val *= 3600;
-
-        if(time===0) time = val;
-
-        interval = setInterval(()=>{
-            if(time <=0){
-                clearInterval(interval);
-                interval = null;
-                isRunning=false;
-                startStopBtn.innerText='Start';
-                updateDisplay();
-                playBeep3Sec();
-            } else {
-                time--;
-                updateDisplay();
-            }
-        },1000);
-
-        isRunning = true;
-        startStopBtn.innerText = 'Stop';
-    } else {
-        clearInterval(interval);
-        interval = null;
-        isRunning=false;
-        startStopBtn.innerText='Start';
-    }
-}
-
-function resetTimer(){
-    clearInterval(interval);
-    time = 0;
-    interval = null;
-    isRunning=false;
-    startStopBtn.innerText='Start';
-    input.value='';
-    updateDisplay();
-}
-
-// Music control button
-musicToggle.addEventListener('click', ()=>{
-    if(audio.src === "") return; // no song selected
-    if(audio.paused){
-        audio.play();
-    } else {
-        audio.pause();
-    }
-});
-
-// Song selection dropdown
-songSelect.addEventListener('change', ()=>{
-    if(audio) audio.pause();
-    if(songSelect.value === "upload"){
-        uploadInput.click();
-    } else if(songSelect.value !== ""){
-        audio.src = songSelect.value;
-        audio.pause();
-        audio.currentTime=0;
-    }
-});
-
-// Upload song
-uploadInput.addEventListener('change', function(){
-    const file = this.files[0];
-    if(file){
-        const url = URL.createObjectURL(file);
-        audio.src = url;
-        audio.pause();
-        audio.currentTime = 0;
-        const newOption = document.createElement("option");
-        newOption.value = url;
-        newOption.text = file.name;
-        newOption.selected = true;
-        songSelect.appendChild(newOption);
-    }
-});
-
-// Play beep 3 seconds when timer ends
-function playBeep3Sec(){
-    let count = 0;
-    beepAudio.play();
-    const beepInterval = setInterval(()=>{
-        beepAudio.currentTime = 0;
-        beepAudio.play();
-        count++;
-        if(count>=3){
-            clearInterval(beepInterval);
-            beepAudio.pause();
-            beepAudio.currentTime = 0;
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toolify Timer | Pro Workspace</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text: #ffffff;
+            --accent: #7efaff;
+            --panel-bg: #1a1f2e;
         }
-    }, 1000);
-}
 
-startStopBtn.addEventListener('click', startStopTimer);
-updateDisplay();
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+        [data-theme="light"] {
+            --glass: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text: #1f2937;
+            --accent: #2563eb;
+            --panel-bg: #ffffff;
+        }
 
-const firebaseConfig = {
-  apiKey: "YOUR_API_KEY",
-  authDomain: "YOUR_PROJECT.firebaseapp.com",
-  projectId: "YOUR_PROJECT_ID",
-  appId: "YOUR_APP_ID"
-};
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; transition: all 0.3s ease; }
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0f172a;
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
 
-onAuthStateChanged(auth, user => {
-  if(!user) window.location.href="login.html";
-});
-</script>
+        /* Brand Header */
+        .nav-header {
+            position: absolute;
+            top: 0; width: 100%;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+        }
 
+        .brand-area {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text);
+        }
 
+        .logo-img { width: 32px; height: 32px; object-fit: contain; }
+        .brand-text { font-weight: 800; font-size: 1.2rem; letter-spacing: -0.5px; }
+
+        .settings-btn {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            width: 45px; height: 45px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.3rem;
+            backdrop-filter: blur(10px);
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* Timer UI Card */
+        .timer-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            padding: 50px;
+            border-radius: 40px;
+            text-align: center;
+            color: var(--text);
+            width: 90%;
+            max-width: 550px;
+            box-shadow: 0 40px 100px rgba(0,0,0,0.3);
+        }
+
+        .time-display {
+            font-size: 6rem;
+            font-weight: 800;
+            margin-bottom: 25px;
+            letter-spacing: -3px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .input-group {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .input-group input {
+            width: 75px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid var(--glass-border);
+            color: var(--text);
+            padding: 12px;
+            border-radius: 12px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        /* Action Group */
+        .action-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-main {
+            background: var(--text);
+            color: #000;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            min-width: 160px;
+        }
+
+        .btn-refresh {
+            background: rgba(255,255,255,0.1);
+            color: var(--text);
+            border: 1px solid var(--glass-border);
+            width: 55px; height: 55px;
+            border-radius: 15px;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .btn-refresh:disabled { opacity: 0.3; cursor: not-allowed; }
+
+        /* Settings Panel */
+        .settings-panel {
+            position: absolute;
+            top: 75px; right: 5%;
+            width: 320px;
+            background: var(--panel-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 25px;
+            display: none;
+            z-index: 2000;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+        }
+
+        .settings-panel.active { display: block; animation: slideIn 0.3s ease; }
+
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Close Button inside Settings */
+        .close-settings {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0.6;
+        }
+        .close-settings:hover { opacity: 1; }
+
+        .setting-item { margin-bottom: 20px; }
+        .setting-item label { display: block; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 10px; opacity: 0.6; color: var(--text); font-weight: 700; }
+
+        .bg-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .bg-thumb {
+            width: 100%; height: 50px;
+            border-radius: 8px;
+            cursor: pointer;
+            object-fit: cover;
+            border: 2px solid transparent;
+            background: #333; /* Placeholder */
+        }
+        .bg-thumb:hover { border-color: var(--accent); }
+
+        .control-btn {
+            width: 100%; padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: rgba(120,120,120,0.1);
+            color: var(--text);
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+    <div class="nav-header">
+        <a href="index.html" class="brand-area">
+            <img src="logo.png" alt="Logo" class="logo-img">
+            <span class="brand-text">TOOLIFY TIMER</span>
+        </a>
+        <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
+    </div>
+
+    <div class="settings-panel" id="settingsPanel">
+        <button class="close-settings" onclick="toggleSettings()">✕</button>
+        
+        <div class="setting-item" style="margin-top: 10px;">
+            <label>Interface</label>
+            <button class="control-btn" onclick="toggleTheme()" id="themeBtn">☀️ Light Mode</button>
+        </div>
+
+        <div class="setting-item">
+            <label>HD Backgrounds</label>
+            <div class="bg-grid">
+                <img src="https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=400" class="bg-thumb" onclick="setBg(this.src)" title="Mountains">
+                <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=400" class="bg-thumb" onclick="setBg(this.src)" title="Sea">
+                <img src="https://images.unsplash.com/photo-1434725039720-abb26e5a484d?q=80&w=400" class="bg-thumb" onclick="setBg(this.src)" title="Nature">
+                <img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=400" class="bg-thumb" onclick="setBg(this.src)" title="Stars">
+                <img src="https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?q=80&w=400" class="bg-thumb" onclick="setBg(this.src)" title="Forest">
+                <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470?q=80&w=400" class="bg-thumb" onclick="setBg(this.src)" title="Lake">
+            </div>
+        </div>
+
+        <div class="setting-item">
+            <label>Custom Look</label>
+            <input type="color" oninput="applyColor(this.value)" style="width:100%; height:40px; border:none; background:none; cursor:pointer; margin-bottom:10px;">
+            <input type="file" id="fileIn" hidden onchange="handleFile(event)">
+            <button class="control-btn" onclick="document.getElementById('fileIn').click()">📤 Upload Photo</button>
+        </div>
+    </div>
+
+    <div class="timer-card">
+        <div class="time-display" id="display">00:00:00</div>
+        
+        <div class="input-group">
+            <input type="number" id="h" placeholder="HH" min="0" max="23">
+            <input type="number" id="m" placeholder="MM" min="0" max="59">
+            <input type="number" id="s" placeholder="SS" min="0" max="59">
+        </div>
+
+        <div class="action-group">
+            <button class="btn-main" id="startBtn" onclick="toggleTimer()">Start Timer</button>
+            <button class="btn-refresh" id="refreshBtn" title="Reset Timer" onclick="clearTimer()">🔄</button>
+        </div>
+    </div>
+
+    <script>
+        let timer;
+        let totalSeconds = 0;
+        let isRunning = false;
+
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.body.setAttribute('data-theme', savedTheme);
+            document.getElementById('themeBtn').innerText = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+        initTheme();
+
+        function toggleSettings() { document.getElementById('settingsPanel').classList.toggle('active'); }
+
+        function toggleTheme() {
+            const current = document.body.getAttribute('data-theme');
+            const newTheme = current === 'dark' ? 'light' : 'dark';
+            document.body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            document.getElementById('themeBtn').innerText = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        }
+
+        function toggleTimer() {
+            const btn = document.getElementById('startBtn');
+            const refreshBtn = document.getElementById('refreshBtn');
+            
+            if (!isRunning) {
+                const hh = parseInt(document.getElementById('h').value) || 0;
+                const mm = parseInt(document.getElementById('m').value) || 0;
+                const ss = parseInt(document.getElementById('s').value) || 0;
+                totalSeconds = (hh * 3600) + (mm * 60) + ss;
+
+                if (totalSeconds <= 0) return;
+                
+                isRunning = true;
+                btn.innerText = "Stop";
+                btn.style.background = "#ff5f5f";
+                btn.style.color = "#fff";
+                refreshBtn.disabled = true;
+                
+                timer = setInterval(() => {
+                    totalSeconds--;
+                    updateDisplay();
+                    if (totalSeconds <= 0) {
+                        clearInterval(timer);
+                        alert("Time's Up!");
+                        stopTimerUI();
+                    }
+                }, 1000);
+            } else {
+                stopTimerUI();
+            }
+        }
+
+        function stopTimerUI() {
+            clearInterval(timer);
+            isRunning = false;
+            const btn = document.getElementById('startBtn');
+            const refreshBtn = document.getElementById('refreshBtn');
+            btn.innerText = "Start Timer";
+            btn.style.background = "var(--text)";
+            btn.style.color = (document.body.getAttribute('data-theme') === 'dark') ? "#000" : "#fff";
+            refreshBtn.disabled = false;
+        }
+
+        function clearTimer() {
+            totalSeconds = 0;
+            document.getElementById('h').value = '';
+            document.getElementById('m').value = '';
+            document.getElementById('s').value = '';
+            updateDisplay();
+        }
+
+        function updateDisplay() {
+            const hrs = Math.floor(totalSeconds / 3600);
+            const mins = Math.floor((totalSeconds % 3600) / 60);
+            const secs = totalSeconds % 60;
+            document.getElementById('display').innerText = 
+                `${String(hrs).padStart(2, '0')}:${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+        }
+
+        // Fixed Image Links Logic
+        function setBg(src) {
+            // Remove the thumbnail query and get high-res
+            const baseSrc = src.split('?')[0];
+            document.body.style.backgroundImage = `url('${baseSrc}?q=80&w=1920')`;
+            document.body.style.backgroundColor = "transparent";
+        }
+
+        function applyColor(color) { document.body.style.backgroundImage = "none"; document.body.style.backgroundColor = color; }
+        
+        function handleFile(e) {
+            const reader = new FileReader();
+            reader.onload = (ev) => { document.body.style.backgroundImage = `url('${ev.target.result}')`; };
+            reader.readAsDataURL(e.target.files[0]);
+        }
+
+        // Set initial background
+        document.body.style.backgroundImage = "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=1920')";
+    </script>
 </body>
-
 </html>
