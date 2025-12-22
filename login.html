@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login | Toolbox Hub</title>
+    <title>Login | Toolify Project</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <style>
         :root {
@@ -16,108 +16,73 @@
             align-items: center; 
             height: 100vh; 
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background: radial-gradient(circle at top left, #1e3c72, #2a5298, #000);
+            background: #0f172a; /* Solid professional background */
             color: white; 
             margin: 0;
-            overflow: hidden;
-        }
-
-        /* Background Animation Circles */
-        .circle {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #7efaff, #e0c3fc);
-            filter: blur(80px);
-            z-index: -1;
-            opacity: 0.4;
         }
 
         .card {
-            background: var(--glass);
-            padding: 45px 35px;
-            border-radius: 30px; 
-            width: 380px; 
+            background: rgba(30, 41, 59, 0.7);
+            padding: 40px;
+            border-radius: 24px; 
+            width: 360px; 
             text-align: center; 
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
-            animation: fadeIn 0.8s ease-out;
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .logo-area { font-size: 3.5rem; margin-bottom: 10px; }
 
-        .logo-area {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
+        h2 { margin: 0; font-weight: 700; font-size: 1.8rem; color: #fff; }
+        .project-tag { font-size: 0.7rem; color: var(--primary); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; display: block; }
 
-        h2 { 
-            margin: 0 0 10px 0; 
-            font-weight: 800; 
-            letter-spacing: -1px;
-            font-size: 1.8rem;
-        }
+        p { color: #94a3b8; margin-bottom: 30px; font-size: 0.95rem; line-height: 1.5; }
 
-        p {
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 30px;
-            font-size: 0.9rem;
-        }
-
-        .google-btn { 
+        .auth-btn { 
             width: 100%; 
-            padding: 14px; 
+            padding: 16px; 
             border: none; 
-            border-radius: 15px; 
+            border-radius: 12px; 
             font-weight: 700; 
             cursor: pointer; 
-            transition: all 0.3s ease;
-            background: white; 
-            color: #222; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 12px; 
+            transition: 0.2s;
+            background: #3b82f6; /* Blue professional button */
+            color: white; 
             font-size: 1rem;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
         }
 
-        .google-btn:hover { 
-            background: #f9f9f9; 
-            transform: translateY(-3px); 
-            box-shadow: 0 8px 20px rgba(126, 250, 255, 0.3);
-        }
+        .auth-btn:hover { background: #2563eb; transform: scale(1.02); }
 
-        .google-btn img { width: 22px; }
-
-        footer {
-            margin-top: 30px;
-            font-size: 0.75rem;
-            color: rgba(255, 255, 255, 0.4);
-            letter-spacing: 1px;
-            text-transform: uppercase;
+        .disclaimer {
+            margin-top: 25px;
+            font-size: 0.7rem;
+            color: #64748b;
+            line-height: 1.4;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
     </style>
 </head>
 <body>
 
-    <div class="circle" style="width: 300px; height: 300px; top: -50px; left: -50px;"></div>
-    <div class="circle" style="width: 250px; height: 250px; bottom: -50px; right: -50px; background: #7b4397;"></div>
-
     <div class="card">
-        <div class="logo-area">🧰</div>
-        <h2>Toolbox Hub</h2>
-        <p>Access all your essential tools in one place.</p>
+        <div class="logo-area">🛠️</div>
+        <span class="project-tag">Personal Portfolio Project</span>
+        <h2>Toolify Login</h2>
+        <p>This is a demonstration utility hub. Sign in to sync your local alarm settings.</p>
         
-        <button class="google-btn" onclick="googleLogin()">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
-            Sign in with Google
+        <button class="auth-btn" onclick="googleLogin()">
+            Continue with Google Account
         </button>
 
-        <footer>Secure Access by Firebase</footer>
+        <div class="disclaimer">
+            <strong>Security Note:</strong> This project uses Firebase Authentication. We do not store or see your passwords. This site is for educational use only.
+        </div>
     </div>
 
 <script type="module">
@@ -136,16 +101,12 @@
 
     window.googleLogin = () => {
         const provider = new GoogleAuthProvider();
-        provider.setCustomParameters({ prompt: 'select_account' });
-
         signInWithPopup(auth, provider)
             .then((result) => {
-                console.log("Logged in as:", result.user.displayName);
                 window.location.href = "index.html"; 
             })
             .catch((error) => {
-                console.error("Auth Error:", error.message);
-                alert("Login failed: " + error.message);
+                alert("Login Error: " + error.message);
             });
     };
 </script>
