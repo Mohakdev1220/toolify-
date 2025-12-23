@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QR Pro Suite | Toolbox Hub</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     
     <style>
         :root {
             --glass: rgba(255, 255, 255, 0.12);
             --primary: #7efaff;
+            --border: rgba(255, 255, 255, 0.2);
         }
 
         body {
@@ -25,72 +27,54 @@
         }
 
         .back-btn {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            background: var(--glass);
-            border: 1px solid rgba(255,255,255,0.2);
-            padding: 10px 20px;
-            border-radius: 12px;
-            color: white;
-            text-decoration: none;
-            backdrop-filter: blur(10px);
-            font-weight: 600;
+            position: fixed; top: 20px; left: 20px;
+            background: var(--glass); border: 1px solid var(--border);
+            padding: 10px 20px; border-radius: 12px; color: white;
+            text-decoration: none; backdrop-filter: blur(10px); font-weight: 600;
         }
 
         .container {
-            background: var(--glass);
-            backdrop-filter: blur(25px);
-            border: 1px solid rgba(255,255,255,0.15);
-            border-radius: 30px;
-            padding: 40px;
-            width: 90%;
-            max-width: 450px;
-            text-align: center;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
-            margin-top: 80px;
+            background: var(--glass); backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.15); border-radius: 30px;
+            padding: 30px; width: 95%; max-width: 500px;
+            text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            margin-top: 80px; margin-bottom: 40px;
         }
 
-        h2 { color: var(--primary); margin-bottom: 25px; }
-
-        input {
-            width: 100%;
-            padding: 15px;
-            border-radius: 15px;
-            border: none;
-            background: rgba(255,255,255,0.1);
-            color: white;
-            font-size: 1rem;
-            margin-bottom: 20px;
-            outline: none;
-            box-sizing: border-box;
+        .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
+        .tab-btn {
+            flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border);
+            background: rgba(255,255,255,0.05); color: white; cursor: pointer; transition: 0.3s;
         }
+        .tab-btn.active { background: var(--primary); color: #000; font-weight: bold; }
 
-        .gen-btn {
-            width: 100%;
-            padding: 15px;
-            border-radius: 15px;
-            border: none;
-            background: var(--primary);
-            color: #000;
-            font-weight: 800;
-            cursor: pointer;
-            transition: 0.3s;
+        .section { display: none; }
+        .section.active { display: block; }
+
+        input, .drop-zone {
+            width: 100%; padding: 15px; border-radius: 15px; border: 2px dashed rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.05); color: white; margin-bottom: 20px; box-sizing: border-box;
         }
+        input { border-style: solid; outline: none; }
 
-        .gen-btn:hover { transform: scale(1.02); background: white; }
+        .action-btn {
+            width: 100%; padding: 15px; border-radius: 15px; border: none;
+            background: var(--primary); color: #000; font-weight: 800;
+            cursor: pointer; transition: 0.3s; margin-bottom: 10px;
+        }
+        .action-btn:hover { background: white; transform: translateY(-2px); }
 
         #qrcode {
-            background: white;
-            padding: 15px;
-            border-radius: 15px;
-            margin: 25px auto;
-            display: inline-block;
-            min-height: 128px;
-            min-width: 128px;
+            background: white; padding: 15px; border-radius: 15px;
+            margin: 20px auto; display: none; width: fit-content;
         }
 
-        #qrcode img { margin: 0 auto; }
+        #result-text {
+            background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;
+            word-break: break-all; margin-top: 15px; display: none; border: 1px solid var(--primary);
+        }
+
+        .dl-btn { background: #2ecc71; color: white; display: none; }
     </style>
 </head>
 <body>
@@ -98,37 +82,89 @@
     <a href="index.html" class="back-btn">🏠 Dashboard</a>
 
     <div class="container">
-        <h2>🔍 QR Code Maker</h2>
-        <input type="text" id="qrText" placeholder="Paste link or text here...">
-        <button class="gen-btn" onclick="generateQR()">GENERATE QR CODE</button>
-        
-        <div id="qrcode"></div>
-        <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 15px;">Your QR will appear above</p>
+        <div class="tabs">
+            <button class="tab-btn active" onclick="switchTab('make')">Generate</button>
+            <button class="tab-btn" onclick="switchTab('scan')">Scan File</button>
+        </div>
+
+        <div id="make-section" class="section active">
+            <h2>✨ Create QR</h2>
+            <input type="text" id="qrText" placeholder="Paste URL or Text...">
+            <button class="action-btn" onclick="generateQR()">GENERATE</button>
+            
+            <div id="qrcode"></div>
+            <button id="downloadBtn" class="action-btn dl-btn" onclick="downloadQR()">💾 DOWNLOAD QR</button>
+        </div>
+
+        <div id="scan-section" class="section">
+            <h2>📂 Scan Image</h2>
+            <div class="drop-zone">
+                <p>Drag & Drop QR Image or</p>
+                <input type="file" id="qr-input" accept="image/*" style="border:none; margin:0;">
+            </div>
+            <div id="result-text"></div>
+        </div>
     </div>
 
     <script>
+        // --- Tab Switching ---
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab + '-section').classList.add('active');
+        }
+
+        // --- Generator Logic ---
         function generateQR() {
             const text = document.getElementById("qrText").value;
             const container = document.getElementById("qrcode");
-            
-            if (!text) {
-                alert("Please enter some text or a URL!");
-                return;
-            }
+            const dlBtn = document.getElementById("downloadBtn");
 
-            // Clear old QR
+            if (!text) return alert("Enter some text!");
+
             container.innerHTML = "";
-
-            // Generate New QR
+            container.style.display = "block";
+            
             new QRCode(container, {
                 text: text,
                 width: 200,
                 height: 200,
-                colorDark: "#000000",
-                colorLight: "#ffffff",
                 correctLevel: QRCode.CorrectLevel.H
             });
+
+            setTimeout(() => { dlBtn.style.display = "block"; }, 300);
         }
+
+        function downloadQR() {
+            const img = document.querySelector("#qrcode img");
+            if (!img) return;
+            const link = document.createElement("a");
+            link.href = img.src;
+            link.download = "toolify-qr.png";
+            link.click();
+        }
+
+        // --- Scanner Logic (File Browser) ---
+        const html5QrCode = new Html5Qrcode("scan-section");
+        const fileInput = document.getElementById('qr-input');
+        const resultDiv = document.getElementById('result-text');
+
+        fileInput.addEventListener('change', e => {
+            if (e.target.files.length === 0) return;
+            const imageFile = e.target.files[0];
+
+            html5QrCode.scanFile(imageFile, true)
+                .then(decodedText => {
+                    resultDiv.style.display = "block";
+                    resultDiv.innerHTML = `<strong>Decoded Content:</strong><br>${decodedText}`;
+                })
+                .catch(err => {
+                    resultDiv.style.display = "block";
+                    resultDiv.innerHTML = `<span style="color: #ff7e7e;">Error: Could not find a valid QR code.</span>`;
+                });
+        });
     </script>
 
     <script type="module">
