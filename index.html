@@ -28,70 +28,86 @@
             display: flex; justify-content: space-between; align-items: center; z-index: 1000;
         }
 
+        /* FLOATING YOUTUBE LINK (BOTTOM RIGHT) */
+        .floating-yt {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(255, 0, 0, 0.1);
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            text-decoration: none;
+            color: white;
+            font-weight: 600;
+            z-index: 2000;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            backdrop-filter: blur(10px);
+        }
+
+        .floating-yt:hover {
+            transform: scale(1.1);
+            background: var(--yt-red);
+            box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+        }
+
+        .floating-yt svg {
+            width: 24px;
+            height: 24px;
+            fill: var(--yt-red);
+            transition: 0.3s;
+        }
+
+        .floating-yt:hover svg {
+            fill: white;
+        }
+
+        /* Pulsing effect for the floating button */
+        @keyframes pulse-yt {
+            0% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(255, 0, 0, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 0, 0, 0); }
+        }
+        .floating-yt { animation: pulse-yt 2s infinite; }
+
+        /* Rest of your existing styles */
         .brand-container { display: flex; align-items: center; gap: 12px; }
         .logo-img { width: 45px; height: 45px; object-fit: contain; }
         .logo-text { font-size: 1.8rem; font-weight: 800; letter-spacing: -1px; }
         .logo-text .part1 { color: var(--primary); }
         .logo-text .part2 { color: var(--secondary); }
 
-        /* FOOTER UPDATES */
         footer {
             position: fixed; bottom: 0; left: 0; width: 100%; padding: 20px;
             text-align: center; font-size: 0.8rem; letter-spacing: 2px;
-            color: rgba(255, 255, 255, 0.5); z-index: 1000;
+            color: rgba(255, 255, 255, 0.3); z-index: 1000;
+            pointer-events: none; /* Allows clicking things behind footer text */
         }
-        .footer-link { color: inherit; text-decoration: none; transition: 0.3s; }
-        .footer-link:hover { color: var(--primary); }
-        .heart { color: #ff0000; display: inline-block; transition: transform 0.3s ease; }
-        footer:hover .heart { transform: scale(1.3); }
 
         .nav-right { display: flex; align-items: center; gap: 15px; }
-        #other-accounts { display: flex; gap: -10px; margin-right: 10px; }
-        .mini-avatar { 
-            width: 30px; height: 30px; border-radius: 50%; border: 2px solid #000; 
-            margin-left: -10px; transition: 0.3s; cursor: pointer;
-        }
-        .mini-avatar:hover { transform: translateY(-3px); margin-right: 5px; }
-
-        .settings-menu { position: relative; display: inline-block; }
         .gear-btn { background: none; border: none; font-size: 1.6rem; cursor: pointer; transition: 0.3s; }
-        .gear-btn:hover { transform: rotate(45deg); }
-
         .dropdown-content {
             display: none; position: absolute; right: 0; top: 40px;
             background: rgba(15, 15, 15, 0.95); border: 1px solid var(--border);
-            min-width: 200px; border-radius: 12px; backdrop-filter: blur(10px); overflow: hidden;
+            min-width: 200px; border-radius: 12px; backdrop-filter: blur(10px);
         }
-        .dropdown-content a, .dropdown-content button {
-            color: white; padding: 12px 16px; text-decoration: none; display: block;
-            font-size: 0.9rem; transition: 0.2s; background: none; border: none; width: 100%; text-align: left;
-            cursor: pointer;
-        }
-        .dropdown-content a:hover, .dropdown-content button:hover { background: var(--glass); color: var(--primary); }
         .settings-menu:hover .dropdown-content { display: block; }
 
         #landing-page {
             height: 100vh; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; text-align: center; transition: 0.8s ease;
+            justify-content: center; align-items: center; text-align: center;
         }
 
-        .hero-title { font-size: 4.5rem; font-weight: 800; margin-bottom: 10px; }
+        .hero-title { font-size: 4.5rem; font-weight: 800; }
         .hero-title .part1 { color: var(--primary); }
-        .hero-title .part2 { color: var(--secondary); }
-        .tagline { color: #9aa0a6; font-size: 1.2rem; margin-bottom: 40px; }
-
-        .btn {
-            padding: 14px 35px; border-radius: 12px; cursor: pointer;
-            font-weight: 600; transition: 0.3s; border: 1px solid var(--border);
-            text-decoration: none; font-size: 1rem;
-        }
-        .btn-primary { background: var(--primary); color: #000; border: none; }
-        .btn-primary:hover { box-shadow: 0 0 30px rgba(0, 242, 255, 0.4); transform: scale(1.05); }
+        .btn-primary { background: var(--primary); color: #000; padding: 14px 35px; border-radius: 12px; border:none; cursor:pointer; font-weight:600; }
 
         #dashboard {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             padding: 120px 8% 40px 8%; display: none; opacity: 0; 
-            transform: scale(1.1); transition: 0.8s all cubic-bezier(0.4, 0, 0.2, 1);
             overflow-y: auto;
         }
 
@@ -107,22 +123,6 @@
         .card:hover { background: var(--primary); color: #000; transform: translateY(-10px); }
         .card-icon { font-size: 2.5rem; margin-bottom: 15px; display: block; }
 
-        /* YOUTUBE CARD SPECIAL STYLING */
-        .card-yt { border: 1px solid rgba(255, 0, 0, 0.2); }
-        .card-yt:hover { background: var(--yt-red) !important; color: white; }
-        .yt-svg { width: 50px; height: 50px; fill: var(--yt-red); transition: 0.3s; margin-bottom: 15px; }
-        .card-yt:hover .yt-svg { fill: white; }
-
-        #feedback-modal {
-            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            background: #111; padding: 30px; border-radius: 20px; border: 1px solid var(--primary);
-            z-index: 2000; width: 90%; max-width: 400px; box-shadow: 0 0 50px rgba(0,0,0,0.8);
-        }
-        #feedback-modal textarea {
-            width: 100%; height: 120px; background: #222; border: 1px solid var(--border);
-            color: white; padding: 12px; border-radius: 10px; margin: 15px 0; outline: none;
-        }
-
         .show-page { display: block !important; opacity: 1 !important; transform: scale(1) !important; }
         .hide-page { display: none !important; }
     </style>
@@ -133,35 +133,36 @@
         <source src="background.mp4" type="video/mp4">
     </video>
 
+    <a href="https://www.youtube.com/@MOHAKCHOUBEY" target="_blank" class="floating-yt">
+        <svg viewBox="0 0 24 24"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.377.505 9.377.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
+        <span>YouTube</span>
+    </a>
+
     <header>
         <div class="brand-container">
-            <img src="logo.png" alt="Toolify Logo" class="logo-img">
+            <img src="logo.png" alt="" class="logo-img">
             <div class="logo-text"><span class="part1">Tool</span><span class="part2">ify</span></div>
         </div>
         <div class="nav-right">
-            <div id="other-accounts"></div>
             <div id="auth-header-area"></div>
             <div class="settings-menu">
                 <button class="gear-btn">⚙️</button>
                 <div class="dropdown-content">
                     <a href="privacy.html">Privacy Policy</a>
                     <a href="terms.html">Terms & Conditions</a>
-                    <div id="feedback-opt-container"></div>
-                    <hr style="opacity:0.1">
-                    <div id="logout-opt-container"></div>
                 </div>
             </div>
         </div>
     </header> 
     
     <footer> 
-        DEVELOPED WITH <span class="heart">♥</span> BY <a href="https://www.youtube.com/@MOHAKCHOUBEY" target="_blank" class="footer-link">MOHAK</a> 
+        DEVELOPED WITH <span style="color:red">♥</span> BY MOHAK 
     </footer>
 
     <section id="landing-page">
         <h1 class="hero-title"><span class="part1">Tool</span><span class="part2">ify</span></h1>
-        <p class="tagline">The futuristic workspace for digital creators.</p>
-        <button class="btn btn-primary" onclick="enterAsGuest()">Get Started</button>
+        <p style="color:#9aa0a6; margin-bottom:40px;">The futuristic workspace for digital creators.</p>
+        <button class="btn-primary" onclick="enterAsGuest()">Get Started</button>
     </section>
 
     <section id="dashboard">
@@ -175,69 +176,15 @@
             <a href="speech.html" class="card"><span class="card-icon">🗣️</span><h4>Speech</h4></a>
             <a href="calendar.html" class="card"><span class="card-icon">📅</span><h4>Calendar</h4></a>
             <a href="pdf.html" class="card"><span class="card-icon">📄</span><h4>Pdf maker</h4></a>
-            
-            <a href="https://www.youtube.com/@MOHAKCHOUBEY" target="_blank" class="card card-yt">
-                <svg class="yt-svg" viewBox="0 0 24 24">
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.377.505 9.377.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
-                </svg>
-                <h4>YouTube</h4>
-            </a>
         </div>
     </section>
 
-    <div id="feedback-modal">
-        <h3>Submit Feedback</h3>
-        <form id="feedback-form">
-            <textarea id="feedback-text" name="message" placeholder="Tell us how we can improve..." required></textarea>
-            <input type="hidden" id="user-info-field" name="user_email">
-            <div style="display:flex; gap:10px;">
-                <button type="submit" id="fb-submit-btn" class="btn btn-primary" style="flex:1">Send</button>
-                <button type="button" class="btn" style="flex:1" onclick="document.getElementById('feedback-modal').style.display='none'">Close</button>
-            </div>
-        </form>
-    </div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyAeHDhdiTRwftUGYgrb1m19v7hm2R5rb-Y",
-            authDomain: "toolbox-hub-98c03.firebaseapp.com",
-            projectId: "toolbox-hub-98c03",
-            appId: "1:321020105472:web:356e7c2903def7b9d859e5"
-        };
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        provider.setCustomParameters({ prompt: 'select_account' });
-
+    <script>
         window.enterAsGuest = () => {
             document.getElementById('landing-page').classList.add('hide-page');
             document.getElementById('dashboard').classList.add('show-page');
             document.getElementById('bg-video').classList.add('blurred');
         };
-
-        window.signIn = async () => {
-            try { await signInWithPopup(auth, provider); } catch(e) { console.error(e); }
-        };
-
-        window.logout = () => signOut(auth).then(() => { location.reload(); });
-
-        onAuthStateChanged(auth, (user) => {
-            const authArea = document.getElementById('auth-header-area');
-            if (user) {
-                enterAsGuest();
-                authArea.innerHTML = `
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${user.photoURL}" style="width:35px; border-radius:50%; border:1px solid var(--primary);">
-                        <span style="font-weight:600; font-size:0.9rem;">${user.displayName.split(' ')[0]}</span>
-                    </div>`;
-                document.getElementById('logout-opt-container').innerHTML = `<button onclick="logout()" style="color:#ff5f5f;">Sign Out</button>`;
-            } else {
-                authArea.innerHTML = `<button class="btn btn-primary" style="padding: 8px 20px;" onclick="signIn()">Sign In</button>`;
-            }
-        });
     </script>
 </body>
 </html>
