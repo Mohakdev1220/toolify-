@@ -31,6 +31,7 @@
             background: var(--glass); border: 1px solid var(--border);
             padding: 10px 20px; border-radius: 12px; color: white;
             text-decoration: none; backdrop-filter: blur(10px); font-weight: 600;
+            z-index: 100;
         }
 
         .container {
@@ -43,7 +44,7 @@
 
         .tabs { display: flex; gap: 10px; margin-bottom: 25px; }
         .tab-btn {
-            flex: 1; padding: 10px; border-radius: 10px; border: 1px solid var(--border);
+            flex: 1; padding: 12px; border-radius: 10px; border: 1px solid var(--border);
             background: rgba(255,255,255,0.05); color: white; cursor: pointer; transition: 0.3s;
         }
         .tab-btn.active { background: var(--primary); color: #000; font-weight: bold; }
@@ -52,11 +53,10 @@
         .section.active { display: block; }
 
         input, .drop-zone {
-            width: 100%; padding: 15px; border-radius: 15px; border: 2px dashed rgba(255,255,255,0.2);
+            width: 100%; padding: 15px; border-radius: 15px; border: 2px dashed var(--border);
             background: rgba(255,255,255,0.05); color: white; margin-bottom: 20px; box-sizing: border-box;
         }
-        input { border-style: solid; outline: none; }
-
+        
         .action-btn {
             width: 100%; padding: 15px; border-radius: 15px; border: none;
             background: var(--primary); color: #000; font-weight: 800;
@@ -64,14 +64,17 @@
         }
         .action-btn:hover { background: white; transform: translateY(-2px); }
 
+        #reader { width: 100%; border-radius: 15px; overflow: hidden; margin-bottom: 20px; background: #000; }
+
         #qrcode {
             background: white; padding: 15px; border-radius: 15px;
             margin: 20px auto; display: none; width: fit-content;
         }
 
         #result-text {
-            background: rgba(0,0,0,0.3); padding: 15px; border-radius: 10px;
-            word-break: break-all; margin-top: 15px; display: none; border: 1px solid var(--primary);
+            background: rgba(0,0,0,0.5); padding: 15px; border-radius: 10px;
+            word-break: break-all; margin-top: 15px; display: none; 
+            border: 1px solid var(--primary); color: var(--primary);
         }
 
         .dl-btn { background: #2ecc71; color: white; display: none; }
@@ -84,56 +87,58 @@
     <div class="container">
         <div class="tabs">
             <button class="tab-btn active" onclick="switchTab('make')">Generate</button>
-            <button class="tab-btn" onclick="switchTab('scan')">Scan File</button>
+            <button class="tab-btn" onclick="switchTab('scan')">Scan QR</button>
         </div>
 
         <div id="make-section" class="section active">
             <h2>✨ Create QR</h2>
-            <input type="text" id="qrText" placeholder="Paste URL or Text...">
+            <input type="text" id="qrText" style="border-style:solid;" placeholder="Paste URL or Text...">
             <button class="action-btn" onclick="generateQR()">GENERATE</button>
-            
             <div id="qrcode"></div>
             <button id="downloadBtn" class="action-btn dl-btn" onclick="downloadQR()">💾 DOWNLOAD QR</button>
         </div>
 
         <div id="scan-section" class="section">
-            <h2>📂 Scan Image</h2>
-            <div class="drop-zone">
-                <p>Drag & Drop QR Image or</p>
-                <input type="file" id="qr-input" accept="image/*" style="border:none; margin:0;">
+            <h2>📷 Live Scanner</h2>
+            <div id="reader"></div>
+            
+            <div class="drop-zone" id="drop-area">
+                <p>Drag Image here or</p>
+                <input type="file" id="qr-input" accept="image/*" style="border:none; margin:0; cursor:pointer;">
             </div>
+            
+            <button class="action-btn" style="background:#ff4d4d; color:white;" onclick="stopCamera()">🛑 STOP CAMERA</button>
             <div id="result-text"></div>
         </div>
     </div>
 
     <script>
-        // --- Tab Switching ---
+        let html5QrCode;
+
         function switchTab(tab) {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
             
-            event.target.classList.add('active');
+            const activeBtn = event.currentTarget;
+            activeBtn.classList.add('active');
             document.getElementById(tab + '-section').classList.add('active');
+
+            if(tab === 'scan') {
+                startCamera();
+            } else {
+                stopCamera();
+            }
         }
 
-        // --- Generator Logic ---
+        // --- GENERATOR LOGIC ---
         function generateQR() {
             const text = document.getElementById("qrText").value;
             const container = document.getElementById("qrcode");
             const dlBtn = document.getElementById("downloadBtn");
-
             if (!text) return alert("Enter some text!");
-
             container.innerHTML = "";
             container.style.display = "block";
-            
-            new QRCode(container, {
-                text: text,
-                width: 200,
-                height: 200,
-                correctLevel: QRCode.CorrectLevel.H
-            });
-
+            new QRCode(container, { text: text, width: 200, height: 200, correctLevel: QRCode.CorrectLevel.H });
             setTimeout(() => { dlBtn.style.display = "block"; }, 300);
         }
 
@@ -146,24 +151,44 @@
             link.click();
         }
 
-        // --- Scanner Logic (File Browser) ---
-        const html5QrCode = new Html5Qrcode("scan-section");
-        const fileInput = document.getElementById('qr-input');
-        const resultDiv = document.getElementById('result-text');
-
-        fileInput.addEventListener('change', e => {
-            if (e.target.files.length === 0) return;
-            const imageFile = e.target.files[0];
-
-            html5QrCode.scanFile(imageFile, true)
-                .then(decodedText => {
-                    resultDiv.style.display = "block";
-                    resultDiv.innerHTML = `<strong>Decoded Content:</strong><br>${decodedText}`;
-                })
-                .catch(err => {
-                    resultDiv.style.display = "block";
-                    resultDiv.innerHTML = `<span style="color: #ff7e7e;">Error: Could not find a valid QR code.</span>`;
+        // --- SCANNER LOGIC ---
+        async function startCamera() {
+            html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 250, height: 250 } };
+            
+            try {
+                await html5QrCode.start({ facingMode: "environment" }, config, (decodedText) => {
+                    showResult(decodedText);
                 });
+            } catch (err) {
+                console.error("Camera failed", err);
+            }
+        }
+
+        function stopCamera() {
+            if (html5QrCode && html5QrCode.isScanning) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById("reader").innerHTML = "";
+                });
+            }
+        }
+
+        function showResult(text) {
+            const res = document.getElementById("result-text");
+            res.style.display = "block";
+            res.innerHTML = `<strong>Result Found:</strong><br><a href="${text}" target="_blank" style="color:white;">${text}</a>`;
+            // Optional: stop camera after successful scan
+            // stopCamera();
+        }
+
+        // File Browser / Drag & Drop Logic
+        document.getElementById('qr-input').addEventListener('change', e => {
+            if (e.target.files.length === 0) return;
+            const file = e.target.files[0];
+            const tempScanner = new Html5Qrcode("reader");
+            tempScanner.scanFile(file, true)
+                .then(text => showResult(text))
+                .catch(err => alert("No QR code found in this image."));
         });
     </script>
 
@@ -177,14 +202,9 @@
             projectId: "toolbox-hub-98c03",
             appId: "1:321020105472:web:356e7c2903def7b9d859e5"
         };
-
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
-
-        onAuthStateChanged(auth, user => {
-            if(!user) window.location.href="login.html";
-        });
+        onAuthStateChanged(auth, user => { if(!user) window.location.href="login.html"; });
     </script>
-
 </body>
 </html>
