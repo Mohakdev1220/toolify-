@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Toolify Alarm | Essential Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Theme Variables */
         :root {
             --bg: #f0f2f5;
             --card: #ffffff;
@@ -28,26 +28,24 @@
         }
 
         body {
-            margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0; font-family: 'Inter', sans-serif;
             background: var(--bg); color: var(--text);
             display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; transition: background 0.4s, color 0.4s;
+            min-height: 100vh; transition: 0.4s;
         }
 
-        /* Nav & Hub Header */
         .header { width: 100%; max-width: 500px; padding: 20px; display: flex; justify-content: space-between; align-items: center; box-sizing: border-box; }
-        .hub-link { text-decoration: none; color: var(--primary); font-weight: 700; font-size: 0.8rem; border: 1.5px solid var(--primary); padding: 6px 14px; border-radius: 20px; }
+        .hub-link { text-decoration: none; color: var(--primary); font-weight: 700; font-size: 0.8rem; border: 1.5px solid var(--primary); padding: 6px 14px; border-radius: 20px; transition: 0.3s; }
+        .hub-link:hover { background: var(--primary); color: white; }
         .theme-toggle { background: var(--accent); border: none; padding: 8px 12px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
 
-        /* Main Clock Area */
-        .toolify-brand { font-size: 0.7rem; font-weight: 800; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; margin-bottom: -10px; margin-top: 20px;}
-        #clock { font-size: 4.5rem; font-weight: 800; margin: 20px 0; letter-spacing: -2px; }
+        .toolify-brand { font-size: 0.7rem; font-weight: 800; color: var(--primary); letter-spacing: 2px; text-transform: uppercase; margin-top: 20px; }
+        #clock { font-size: 4.5rem; font-weight: 800; margin: 15px 0; letter-spacing: -2px; }
 
-        /* Control Card */
         .card {
             background: var(--card); width: 90%; max-width: 420px;
             padding: 25px; border-radius: 30px; box-shadow: 0 10px 40px rgba(0,0,0,0.1);
-            box-sizing: border-box; margin-bottom: 20px;
+            box-sizing: border-box; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);
         }
         label { font-size: 0.65rem; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; display: block; margin-bottom: 8px; }
         input {
@@ -57,39 +55,39 @@
 
         .save-btn {
             width: 100%; padding: 18px; border-radius: 15px; border: none;
-            background: var(--primary); color: white; font-weight: 700; font-size: 1rem; cursor: pointer;
+            background: var(--primary); color: white; font-weight: 700; font-size: 1rem; cursor: pointer; transition: 0.3s;
         }
+        .save-btn:hover { opacity: 0.9; transform: scale(1.02); }
 
-        /* Alarms List */
         #list { width: 90%; max-width: 420px; margin-bottom: 100px; }
         .alarm-item {
-            background: var(--card); padding: 15px 20px; border-radius: 20px;
-            display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            background: var(--card); padding: 18px 20px; border-radius: 22px;
+            display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.05);
         }
-        .alarm-item b { font-size: 1.5rem; }
-        .del-btn { background: none; border: none; color: var(--danger); font-size: 1.2rem; cursor: pointer; }
+        .alarm-item b { font-size: 1.6rem; }
+        .del-btn { background: none; border: none; color: var(--danger); font-size: 1.2rem; cursor: pointer; padding: 5px; }
 
-        /* Ringing Overlay */
+        /* Overlay Styles */
         .overlay {
             position: fixed; inset: 0; background: var(--overlay-bg);
             z-index: 9999; display: none; flex-direction: column; justify-content: center; align-items: center;
         }
         .overlay.active { display: flex; }
-        .ring-icon { font-size: 5rem; margin-bottom: 20px; animation: shake 0.5s infinite; }
-        .overlay h2 { font-size: 3rem; margin: 10px 0; }
-        .overlay p { color: var(--muted); margin-bottom: 30px; font-size: 1.2rem; }
-        .overlay-btns { display: flex; gap: 15px; width: 80%; max-width: 300px; }
-        .stop-btn { flex: 1; padding: 20px; border-radius: 15px; border: none; background: var(--danger); color: white; font-weight: bold; cursor: pointer; }
-        .snooze-btn { flex: 1; padding: 20px; border-radius: 15px; border: none; background: var(--primary); color: white; font-weight: bold; cursor: pointer; }
+        .ring-icon { font-size: 5rem; margin-bottom: 20px; animation: ring 0.5s infinite; }
+        .overlay h2 { font-size: 4rem; margin: 10px 0; font-weight: 800; }
+        .overlay p { color: var(--muted); margin-bottom: 40px; font-size: 1.4rem; }
+        .overlay-btns { display: flex; gap: 15px; width: 85%; max-width: 350px; }
+        .stop-btn, .snooze-btn { flex: 1; padding: 22px; border-radius: 18px; border: none; color: white; font-weight: 800; font-size: 1.1rem; cursor: pointer; }
+        .stop-btn { background: var(--danger); box-shadow: 0 10px 20px rgba(255, 59, 48, 0.3); }
+        .snooze-btn { background: var(--primary); box-shadow: 0 10px 20px rgba(0, 113, 227, 0.3); }
 
-        /* Footer */
-        footer { margin-top: auto; padding: 30px; color: var(--muted); font-size: 0.8rem; text-align: center; width: 100%; background: var(--card); }
+        footer { margin-top: auto; padding: 30px; color: var(--muted); font-size: 0.8rem; text-align: center; width: 100%; border-top: 1px solid rgba(0,0,0,0.05); }
 
-        @keyframes shake {
+        @keyframes ring {
             0% { transform: rotate(0); }
-            25% { transform: rotate(10deg); }
-            50% { transform: rotate(-10deg); }
+            25% { transform: rotate(15deg); }
+            50% { transform: rotate(-15deg); }
             100% { transform: rotate(0); }
         }
     </style>
@@ -97,7 +95,7 @@
 <body>
 
 <div class="header">
-    <a href="#" class="hub-link">TOOLBOX HUB</a>
+    <a href="index.html" class="hub-link">TOOLBOX HUB</a>
     <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
 </div>
 
@@ -108,7 +106,7 @@
     <label>Time</label>
     <input type="time" id="timeInput">
     
-    <label>Label</label>
+    <label>Alarm Label</label>
     <input type="text" id="labelInput" placeholder="Wake Up">
 
     <button class="save-btn" onclick="saveAlarm()">SET ALARM</button>
@@ -127,11 +125,12 @@
 </div>
 
 <footer>
-    © 2025 Toolify Hub • All Rights Reserved
+    DEVELOPED WITH ♥ BY MOHAK | © 2025 TOOLIFY HUB
 </footer>
 
 <audio id="alarmSound" loop preload="auto">
-    <source src="https://assets.mixkit.co/sfx/preview/mixkit-alarm-digital-clock-beep-989.mp3" type="audio/mpeg">
+    <source src="https://actions.google.com/sounds/v1/alarms/digital_watch_alarm_long.ogg" type="audio/ogg">
+    <source src="https://raw.githubusercontent.com/freeCodeCamp/cdn/master/build/testable-projects-fcc/audio/BeepSound.wav" type="audio/wav">
 </audio>
 
 <script>
@@ -139,17 +138,14 @@
     let activeAlarm = null;
     const sound = document.getElementById("alarmSound");
 
-    // 1. Light/Dark Mode Logic
     function toggleTheme() {
         document.body.classList.toggle('dark-mode');
-        const isDark = document.body.classList.contains('dark-mode');
-        localStorage.setItem('toolify_theme', isDark ? 'dark' : 'light');
+        localStorage.setItem('toolify_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
     }
 
-    // Restore Theme
     if(localStorage.getItem('toolify_theme') === 'dark') document.body.classList.add('dark-mode');
 
-    // 2. Notification Permission
+    // Notification Setup
     if ("Notification" in window && Notification.permission === "default") {
         Notification.requestPermission();
     }
@@ -162,12 +158,14 @@
         alarms.push({ id: Date.now(), time, label, triggered: false });
         localStorage.setItem("toolify_alarms", JSON.stringify(alarms));
         render();
+        document.getElementById("timeInput").value = "";
+        document.getElementById("labelInput").value = "";
     }
 
     function render() {
         const list = document.getElementById("list");
         list.innerHTML = "";
-        alarms.forEach(a => {
+        alarms.sort((a,b) => a.time.localeCompare(b.time)).forEach(a => {
             const div = document.createElement("div");
             div.className = "alarm-item";
             div.innerHTML = `
@@ -189,31 +187,30 @@
 
     function tick() {
         const now = new Date();
-        const timeStr = now.getHours().toString().padStart(2, '0') + ":" + now.getMinutes().toString().padStart(2, '0');
-        const sec = now.getSeconds().toString().padStart(2, '0');
+        const hrs = now.getHours().toString().padStart(2, '0');
+        const mins = now.getMinutes().toString().padStart(2, '0');
+        const secs = now.getSeconds().toString().padStart(2, '0');
+        const timeStr = `${hrs}:${mins}`;
         
-        document.getElementById("clock").innerText = `${timeStr}:${sec}`;
+        document.getElementById("clock").innerText = `${hrs}:${mins}:${secs}`;
 
         alarms.forEach(a => {
             if(a.time === timeStr && !a.triggered) {
                 triggerAlarm(a);
-                a.triggered = true; // Prevents re-triggering in same minute
+                a.triggered = true;
             }
-            // Reset triggered state when minute changes
             if(a.time !== timeStr) a.triggered = false;
         });
     }
 
     function triggerAlarm(a) {
         activeAlarm = a;
-        sound.play().catch(() => console.log("User interaction needed for sound"));
+        sound.play().catch(() => alert("Alarm ringing! (Browser blocked sound, click anywhere to enable)"));
         
-        // Show Overlay
         document.getElementById("overlayTime").innerText = a.time;
         document.getElementById("overlayLabel").innerText = a.label;
         document.getElementById("overlay").classList.add("active");
 
-        // Browser Notification
         if (Notification.permission === "granted") {
             new Notification("Toolify Alarm", { body: a.label, icon: "https://cdn-icons-png.flaticon.com/512/1827/1827379.png" });
         }
@@ -225,18 +222,18 @@
         document.getElementById("overlay").classList.remove("active");
     }
 
-    // 3. Snooze Option (Adds 5 Minutes)
     function snoozeAlarm() {
         stopAlarm();
         const [h, m] = activeAlarm.time.split(":").map(Number);
-        const snoozeDate = new Date();
-        snoozeDate.setHours(h);
-        snoozeDate.setMinutes(m + 5);
+        const snoozeTime = new Date();
+        snoozeTime.setHours(h);
+        snoozeTime.setMinutes(m + 5);
         
-        const newTime = snoozeDate.getHours().toString().padStart(2, '0') + ":" + 
-                        snoozeDate.getMinutes().toString().padStart(2, '0');
+        const newTime = snoozeTime.getHours().toString().padStart(2, '0') + ":" + 
+                        snoozeTime.getMinutes().toString().padStart(2, '0');
         
-        alarms.push({ id: Date.now(), time: newTime, label: activeAlarm.label + " (Snoozed)", triggered: false });
+        alarms.push({ id: Date.now(), time: newTime, label: activeAlarm.label + " (Snooze)", triggered: false });
+        localStorage.setItem("toolify_alarms", JSON.stringify(alarms));
         render();
     }
 
