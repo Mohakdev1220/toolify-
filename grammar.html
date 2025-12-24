@@ -3,265 +3,278 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Toolify Grammar Pro AI</title>
+<title>Grammar Pro AI | Toolify Hub</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 :root{
---bg:#f5f5f7;--card:#ffffffcc;--text:#1d1d1f;
---p:#0071e3;--sec:#86868b;--border:#d2d2d7;--err:#ff3b30;
+  --bg:#f5f5f7; --card:#fff; --text:#1d1d1f;
+  --primary:#0071e3; --muted:#86868b;
+  --border:#d2d2d7; --error:#ff3b30;
 }
 body.dark{
---bg:#000;--card:#1c1c1ecc;--text:#f5f5f7;
---p:#0a84ff;--sec:#8e8e93;--border:#38383a;
+  --bg:#000; --card:#1c1c1e; --text:#f5f5f7;
+  --primary:#0a84ff; --muted:#8e8e93; --border:#38383a;
 }
-*{box-sizing:border-box}
+*{box-sizing:border-box; transition:.3s}
 body{
-margin:0;font-family:Inter;background:var(--bg);
-color:var(--text);transition:.3s;
-display:flex;flex-direction:column;min-height:100vh;
+  margin:0; font-family:Inter,sans-serif;
+  background:var(--bg); color:var(--text);
+  line-height: 1.6;
 }
 header{
-max-width:1100px;margin:auto;width:100%;
-padding:20px;display:flex;justify-content:space-between;align-items:center;
+  max-width:1000px; margin:auto; padding:20px;
+  display:flex; justify-content:space-between; align-items:center;
 }
-.hub-link{
-text-decoration:none;font-weight:700;color:var(--p);
-border:1px solid var(--p);padding:8px 16px;border-radius:20px;
+a{color:var(--primary); text-decoration:none; font-weight:700}
+.container{
+  max-width:850px; margin:auto; padding:20px; text-align: center;
 }
-.container{max-width:900px;margin:auto;width:90%;flex:1}
 .card{
-background:var(--card);backdrop-filter:blur(14px);
-padding:30px;border-radius:30px;
-border:1px solid var(--border);
-box-shadow:0 25px 50px rgba(0,0,0,.08);
+  background:var(--card); padding:25px; text-align: left;
+  border-radius:24px; border:1px solid var(--border);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
 }
-.controls{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-.btn{
-padding:10px 16px;border-radius:14px;
-border:1px solid var(--border);background:transparent;
-font-weight:600;cursor:pointer;color:var(--text);
+.controls, .actions{
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:center; margin-bottom: 15px;
 }
+button{
+  padding:10px 18px; border-radius:14px;
+  border:1px solid var(--border);
+  background:var(--card); font-weight:600;
+  cursor:pointer; color:var(--text); font-size: 13px;
+}
+button:hover{border-color:var(--primary); color:var(--primary); background: var(--bg);}
 textarea{
-width:100%;height:200px;border-radius:20px;
-border:1px solid var(--border);
-padding:20px;font-size:16px;
-background:transparent;color:var(--text);
-resize:none;
+  width:100%; height:220px; padding:18px;
+  border-radius:18px; border:1px solid var(--border);
+  background:var(--bg); color:var(--text);
+  font-size:16px; resize:none; outline: none; font-family: inherit;
 }
 .stats{
-display:flex;justify-content:space-between;
-font-size:12px;font-weight:700;color:var(--sec);margin-top:10px;
+  display:flex; justify-content:space-between;
+  margin:10px 0; font-size:12px;
+  font-weight:700; color:var(--muted);
 }
-.main{
-width:100%;margin-top:20px;padding:18px;
-font-size:18px;border:none;border-radius:18px;
-background:linear-gradient(135deg,#0071e3,#00c6ff);
-color:#fff;font-weight:800;cursor:pointer;
+.main-btn{
+  width:100%; padding:18px;
+  background:var(--primary); color:#fff;
+  border:none; border-radius:18px;
+  font-size:16px; font-weight:800; cursor: pointer;
 }
+.main-btn:hover{ filter: brightness(1.1); transform: translateY(-1px); }
+.output-title { font-size: 14px; font-weight: 800; color: var(--primary); margin-top: 25px; text-transform: uppercase;}
 .output{
-background:var(--card);border-radius:25px;
-padding:25px;border:2px solid var(--p);
-line-height:1.8;
+  margin-top:10px; padding:18px;
+  border-radius:18px; border:2px solid var(--border);
+  background:var(--card); white-space:pre-wrap; font-size: 16px;
 }
-.error{
-background:rgba(255,59,48,.2);
-color:var(--err);padding:2px 5px;border-radius:6px;
+.active-border{border-color:var(--primary)}
+.error-text{
+  color:var(--error);
+  text-decoration:underline wavy var(--error);
+  font-weight:600;
 }
-.section{margin-top:25px}
 .history{
-margin-top:20px;padding:15px;border-radius:20px;
-border:1px solid var(--border);
+  margin-top:40px; padding:20px;
+  border-radius:18px; border:1px solid var(--border);
 }
 .history-item{
-font-size:13px;padding:8px;
-border-bottom:1px solid var(--border);
-cursor:pointer;
+  padding:12px; border-bottom:1px solid var(--border);
+  cursor:pointer; font-size:13px; display: flex; justify-content: space-between;
 }
+.history-item:hover{background:var(--bg)}
 footer{
-padding:30px;text-align:center;
-border-top:1px solid var(--border);
-font-size:13px;color:var(--sec);
+  text-align:center; padding:40px;
+  font-weight:600; color:var(--muted); font-size: 14px;
 }
-.login{
-max-width:350px;margin:80px auto;
-text-align:center;
-}
-.login input{
-width:100%;padding:12px;border-radius:12px;
-border:1px solid var(--border);margin-bottom:10px;
-}
+.heart{color:#ff3b30}
 </style>
 </head>
 
 <body>
 
 <header>
-<a href="index.html" class="hub-link">⬅ TOOLBOX HUB</a>
-<button class="btn" onclick="toggle()">🌓</button>
+  <a href="index.html">🏠 Back to Toolbox</a>
+  <button onclick="toggleTheme()">🌗 Mode</button>
 </header>
 
-<div id="app"></div>
-
-<footer>
-Developed with <span style="color:#ff3b30">❤</span> by Mohak
-</footer>
-
-<script>
-/* ---------------- LOGIN ---------------- */
-let user=localStorage.getItem("user");
-
-const app=document.getElementById("app");
-
-if(!user){
-app.innerHTML=`
-<div class="login card">
-<h2>Login</h2>
-<input id="email" placeholder="Enter email">
-<button class="btn" onclick="login()">Login</button>
-</div>`;
-}else loadTool();
-
-function login(){
-const e=document.getElementById("email").value.trim();
-if(!e)return alert("Enter email");
-localStorage.setItem("user",e);
-location.reload();
-}
-
-/* ---------------- TOOL ---------------- */
-function loadTool(){
-app.innerHTML=`
 <div class="container">
+<h1 style="font-size: 2.5rem; letter-spacing: -1.5px; margin-bottom: 5px;">Grammar <span style="color:var(--primary)">Pro AI</span></h1>
+<p style="color:var(--muted); margin-bottom: 30px; font-weight: 600;">Industrial-grade paragraph analysis & correction</p>
+
 <div class="card">
+
 <div class="controls">
-<button class="btn" onclick="upper()">UPPERCASE</button>
-<button class="btn" onclick="lower()">lowercase</button>
-<button class="btn" onclick="sentence()">Sentence Case</button>
-<button class="btn" onclick="logout()">Logout</button>
+<button onclick="transform('upper')">UPPERCASE</button>
+<button onclick="transform('lower')">lowercase</button>
+<button onclick="transform('sentence')">Sentence case</button>
+<button onclick="clearText()" style="color:var(--error)">Clear All</button>
 </div>
 
-<textarea id="input" placeholder="Paste text here..." oninput="stats()"></textarea>
+<textarea id="userInput" placeholder="Paste your paragraph here to check for errors..."></textarea>
 
 <div class="stats">
-<span id="w">0 Words</span>
-<span id="c">0 Characters</span>
-<span id="e">0 Errors</span>
+<span id="statWords">0 Words</span>
+<span id="statChars">0 Characters</span>
+<span id="statErrors" style="color:var(--error)">0 Errors</span>
 </div>
 
-<button class="main" onclick="process()">ANALYZE & FIX</button>
+<button class="main-btn" onclick="analyze()">ANALYZE & FIX PARAGRAPH</button>
 
-<div class="section">
-<h3>❌ Highlighted Errors</h3>
-<div class="output" id="highlight"></div>
+<div id="resultsSection" style="display:none">
+<div class="output-title">🔴 Detected Errors</div>
+<div class="output" id="highlightOutput"></div>
+
+<div class="output-title">✅ Corrected Text</div>
+<div class="output active-border" id="fixedOutput"></div>
+
+<div class="actions" style="margin-top: 20px;">
+<button onclick="copyText()" style="background: var(--primary); color: white; border: none; flex: 1;">Copy Text</button>
+<button onclick="downloadText()" style="flex: 1;">Download .txt</button>
 </div>
-
-<div class="section">
-<h3>✅ Corrected Text</h3>
-<div class="output" id="fixed"></div>
-<button class="btn" onclick="savePDF()">Save PDF</button>
-<button class="btn" onclick="saveDOCX()">Save DOCX</button>
 </div>
 
 <div class="history">
-<strong>📜 Cloud History</strong>
-<div id="history"></div>
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+    <strong>📜 Cloud History</strong>
+    <span onclick="clearHistory()" style="color:var(--error);cursor:pointer; font-size: 12px; font-weight: 800;">CLEAR ALL</span>
+</div>
+<div id="historyList"></div>
 </div>
 
 </div>
-</div>`;
-loadHistory();
-}
+</div>
 
-/* ---------------- FUNCTIONS ---------------- */
-function toggle(){
-document.body.classList.toggle("dark");
-localStorage.setItem("theme",document.body.classList.contains("dark"));
-}
-if(localStorage.getItem("theme")==="true")document.body.classList.add("dark");
+<footer>
+DEVELOPED WITH <span class="heart">❤</span> BY MOHAK | © 2025 TOOLIFY
+</footer>
 
-function logout(){localStorage.removeItem("user");location.reload();}
-
+<script>
+// Logic Rules Engine
 const rules=[
-[/\bi\b/g,"I"],[/\bthey is\b/gi,"they are"],
-[/\bit are\b/gi,"it is"],[/\bdont\b/gi,"don't"],
-[/\bdoesnt\b/gi,"doesn't"],[/\bisnt\b/gi,"isn't"],
-[/\ba hour\b/gi,"an hour"],[/\bif i was you\b/gi,"if I were you"]
+    [/\bi\b/g,"I"],
+    [/\bthey is\b/gi,"they are"],
+    [/\bhe have\b/gi,"he has"],
+    [/\bshe have\b/gi,"she has"],
+    [/\bwe was\b/gi,"we were"],
+    [/\ba ([aeiou])/gi,"an $1"],
+    [/\bdont\b/gi,"don't"],
+    [/\bdoesnt\b/gi,"doesn't"],
+    [/\bif i was you\b/gi,"if I were you"],
+    [/\bno one want\b/gi,"no one wants"],
+    [/\bmy friend and me\b/gi,"my friend and I"]
 ];
 
+// Elements
+const area = document.getElementById('userInput');
+const resSection = document.getElementById('resultsSection');
+
+function toggleTheme(){
+    document.body.classList.toggle("dark");
+    localStorage.setItem("theme", document.body.classList.contains("dark"));
+}
+if(localStorage.getItem("theme")==="true") document.body.classList.add("dark");
+
+area.addEventListener('input', stats);
+
 function stats(){
-let t=document.getElementById("input").value;
-document.getElementById("w").innerText=`${t?t.split(/\s+/).length:0} Words`;
-document.getElementById("c").innerText=`${t.length} Characters`;
+    const v = area.value.trim();
+    document.getElementById('statWords').innerText = (v ? v.split(/\s+/).length : 0) + " Words";
+    document.getElementById('statChars').innerText = v.length + " Characters";
 }
 
-function upper(){input.value=input.value.toUpperCase();stats();}
-function lower(){input.value=input.value.toLowerCase();stats();}
-function sentence(){input.value=input.value.toLowerCase().replace(/(^\w|\.\s+\w)/g,s=>s.toUpperCase());stats();}
-
-function process(){
-let t=input.value;if(!t)return;
-let errors=0,highlight=t;
-
-rules.forEach(r=>{
-if(r[0].test(highlight)){
-errors++;
-highlight=highlight.replace(r[0],m=>`<span class="error">${m}</span>`);
-t=t.replace(r[0],r[1]);
-}
-});
-t=t.replace(/(^\w|\.\s+\w)/g,s=>s.toUpperCase());
-
-document.getElementById("highlight").innerHTML=highlight;
-document.getElementById("fixed").innerText=t;
-document.getElementById("e").innerText=`${errors} Errors`;
-
-saveHistory(input.value,t);
-loadHistory();
+function transform(t){
+    if(t==="upper") area.value = area.value.toUpperCase();
+    if(t==="lower") area.value = area.value.toLowerCase();
+    if(t==="sentence") area.value = area.value.toLowerCase().replace(/(^\w|\.\s+\w)/g, s => s.toUpperCase());
+    stats();
 }
 
-/* ---------------- SAVE FILES ---------------- */
-function savePDF(){
-let w=window.open("");
-w.document.write(`<pre>${document.getElementById("fixed").innerText}</pre>`);
-w.print();
+function clearText(){
+    area.value = ""; 
+    resSection.style.display = "none"; 
+    stats();
 }
 
-function saveDOCX(){
-let text=document.getElementById("fixed").innerText;
-let blob=new Blob(
-[`<html><body><pre>${text}</pre></body></html>`],
-{type:"application/msword"}
-);
-let a=document.createElement("a");
-a.href=URL.createObjectURL(blob);
-a.download="grammar.docx";
-a.click();
+function analyze(){
+    let text = area.value;
+    if(!text.trim()) return alert("Please enter some text first.");
+    
+    let fixed = text;
+    let highlighted = text;
+    let count = 0;
+
+    rules.forEach(r => {
+        const m = text.match(r[0]);
+        if(m){
+            count += m.length;
+            highlighted = highlighted.replace(r[0], x => `<span class="error-text">${x}</span>`);
+            fixed = fixed.replace(r[0], r[1]);
+        }
+    });
+
+    // Final Polish: Sentence Casing
+    fixed = fixed.replace(/(^\w|\.\s+\w)/g, s => s.toUpperCase());
+
+    document.getElementById('statErrors').innerText = count + " Errors Found";
+    document.getElementById('highlightOutput').innerHTML = highlighted;
+    document.getElementById('fixedOutput').innerText = fixed;
+
+    resSection.style.display = "block";
+    saveHistory(text, fixed);
 }
 
-/* ---------------- HISTORY ---------------- */
-function saveHistory(o,f){
-let key="history_"+localStorage.getItem("user");
-let h=JSON.parse(localStorage.getItem(key)||"[]");
-h.unshift({o,f,time:new Date().toLocaleString()});
-localStorage.setItem(key,JSON.stringify(h.slice(0,10)));
+function copyText(){
+    const text = document.getElementById('fixedOutput').innerText;
+    navigator.clipboard.writeText(text);
+    alert("Text copied to clipboard!");
 }
 
-function loadHistory(){
-let key="history_"+localStorage.getItem("user");
-let h=JSON.parse(localStorage.getItem(key)||"[]");
-let box=document.getElementById("history");
-if(!box)return;
-box.innerHTML="";
-h.forEach(i=>{
-let d=document.createElement("div");
-d.className="history-item";
-d.innerText=i.time;
-d.onclick=()=>{input.value=i.o;document.getElementById("fixed").innerText=i.f;}
-box.appendChild(d);
-});
+function downloadText(){
+    const text = document.getElementById('fixedOutput').innerText;
+    const blob = new Blob([text], {type: "text/plain"});
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "Corrected_Text.txt";
+    link.click();
 }
+
+function saveHistory(o, f){
+    let h = JSON.parse(localStorage.getItem("gram_history") || "[]");
+    h.unshift({o, f, t: new Date().toLocaleString()});
+    localStorage.setItem("gram_history", JSON.stringify(h.slice(0, 5)));
+    renderHistory();
+}
+
+function renderHistory(){
+    const h = JSON.parse(localStorage.getItem("gram_history") || "[]");
+    const list = document.getElementById("historyList");
+    list.innerHTML = h.length ? "" : "<p style='color:var(--muted); font-size: 13px;'>No recent history.</p>";
+    
+    h.forEach(x => {
+        const d = document.createElement("div");
+        d.className = "history-item";
+        d.innerHTML = `<span>Paragraph Summary</span> <span style="color:var(--muted)">${x.t}</span>`;
+        d.onclick = () => { 
+            area.value = x.o; 
+            analyze(); 
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        list.appendChild(d);
+    });
+}
+
+function clearHistory(){
+    if(confirm("Delete all history?")) {
+        localStorage.removeItem("gram_history"); 
+        renderHistory();
+    }
+}
+
+// Init
+renderHistory();
 </script>
 
 </body>
