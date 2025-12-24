@@ -3,204 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grammar Fixer | Toolify Hub</title>
+    <title>Toolify Grammar Pro AI | Ultimate Edition</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f8f9fa;
-            --card: #ffffff;
-            --text: #1a1a1a;
-            --primary: #0071e3;
-            --border: #d2d2d7;
-            --input-bg: #ffffff;
+            --bg: #f5f5f7; --card: #ffffff; --text: #1d1d1f; --p: #0071e3;
+            --sec: #86868b; --border: #d2d2d7; --accent: #f5f5f7;
         }
-
         body.dark-mode {
-            --bg: #000000;
-            --card: #1c1c1e;
-            --text: #ffffff;
-            --primary: #0a84ff;
-            --border: #38383a;
-            --input-bg: #2c2c2e;
+            --bg: #000000; --card: #1c1c1e; --text: #f5f5f7; --p: #0a84ff;
+            --sec: #8e8e93; --border: #38383a; --accent: #2c2c2e;
         }
-
         body {
-            margin: 0; padding: 0; font-family: 'Inter', sans-serif;
-            background: var(--bg); color: var(--text);
-            display: flex; flex-direction: column; align-items: center;
-            min-height: 100vh; transition: 0.3s;
+            margin: 0; font-family: 'Inter', sans-serif; background: var(--bg);
+            color: var(--text); transition: 0.3s; display: flex; flex-direction: column; min-height: 100vh;
         }
-
-        /* Navigation */
         header {
-            width: 100%; max-width: 900px; padding: 20px;
-            display: flex; justify-content: space-between; align-items: center;
-            box-sizing: border-box;
+            width: 100%; max-width: 1000px; margin: 0 auto; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center; box-sizing: border-box;
         }
-
         .hub-link {
-            text-decoration: none; color: var(--primary); font-weight: 700;
-            border: 1px solid var(--primary); padding: 8px 16px; border-radius: 12px;
-            font-size: 0.8rem; transition: 0.3s;
+            text-decoration: none; color: var(--p); font-weight: 700; font-size: 13px;
+            border: 1px solid var(--p); padding: 8px 16px; border-radius: 20px; transition: 0.3s;
         }
-        .hub-link:hover { background: var(--primary); color: white; }
-
-        .theme-btn {
-            background: var(--input-bg); border: 1px solid var(--border);
-            color: var(--text); padding: 8px 12px; border-radius: 10px;
-            cursor: pointer; font-size: 1rem;
-        }
-
-        /* Main Content */
-        .container {
-            width: 90%; max-width: 700px; margin-top: 40px; text-align: center;
-        }
-
-        h1 { font-weight: 800; font-size: 2.5rem; margin-bottom: 10px; letter-spacing: -1px; }
+        .hub-link:hover { background: var(--p); color: white; }
+        
+        .container { width: 90%; max-width: 800px; margin: 20px auto; flex: 1; }
+        .tool-title { text-align: center; margin-bottom: 30px; }
+        .tool-title h1 { font-size: 3rem; font-weight: 800; letter-spacing: -2px; margin: 0; }
         
         .card {
-            background: var(--card); border: 1px solid var(--border);
-            border-radius: 24px; padding: 25px; margin-top: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            background: var(--card); border-radius: 30px; padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.05); border: 1px solid var(--border);
+        }
+
+        .controls { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        select, .btn-small {
+            padding: 10px 15px; border-radius: 12px; border: 1px solid var(--border);
+            background: var(--accent); color: var(--text); font-weight: 600; cursor: pointer; outline: none;
         }
 
         textarea {
-            width: 100%; height: 180px; background: var(--input-bg);
-            border: 1px solid var(--border); border-radius: 15px; padding: 15px;
-            color: var(--text); font-size: 1rem; resize: none; outline: none;
-            box-sizing: border-box; font-family: inherit; line-height: 1.5;
+            width: 100%; height: 220px; background: var(--accent);
+            border: 1px solid var(--border); border-radius: 20px; padding: 20px;
+            color: var(--text); font-size: 16px; resize: none; outline: none;
+            box-sizing: border-box; line-height: 1.6; font-family: inherit;
         }
 
-        .btn-fix {
-            width: 100%; padding: 18px; border-radius: 15px; border: none;
-            background: var(--primary); color: white; font-weight: 700;
-            font-size: 1rem; cursor: pointer; margin-top: 15px; transition: 0.3s;
+        .main-btn {
+            width: 100%; background: var(--p); color: white; border: none;
+            padding: 20px; border-radius: 18px; font-weight: 800; font-size: 18px;
+            margin-top: 20px; cursor: pointer; transition: 0.3s;
         }
-        .btn-fix:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 113, 227, 0.3); }
+        .main-btn:hover { transform: scale(1.02); box-shadow: 0 10px 30px rgba(0, 113, 227, 0.4); }
 
-        /* Results Box */
-        .result-box {
-            margin-top: 25px; text-align: left; display: none;
-            animation: slideUp 0.4s ease;
-        }
-
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-        .result-label { font-size: 0.7rem; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
-
-        .output-area {
-            background: var(--input-bg); border: 1.5px solid var(--primary);
-            padding: 20px; border-radius: 18px; position: relative;
+        .stats {
+            display: flex; justify-content: space-around; margin-top: 15px;
+            font-size: 12px; font-weight: 700; color: var(--sec); text-transform: uppercase;
         }
 
-        .copy-btn {
-            position: absolute; top: 12px; right: 12px;
-            background: var(--primary); color: white; border: none;
-            padding: 6px 12px; border-radius: 8px; font-size: 0.7rem;
-            font-weight: bold; cursor: pointer;
+        .result-area {
+            margin-top: 30px; display: none; animation: slideUp 0.5s ease;
+        }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .output-box {
+            background: var(--card); border: 2px solid var(--p); padding: 25px;
+            border-radius: 25px; position: relative; font-size: 17px; line-height: 1.8;
+        }
+        .copy-tag {
+            position: absolute; top: 10px; right: 10px; background: var(--p);
+            color: white; padding: 5px 12px; border-radius: 8px; font-size: 10px;
+            font-weight: 800; cursor: pointer; border: none;
         }
 
-        /* Footer */
         footer {
-            margin-top: auto; width: 100%; padding: 40px 0;
-            text-align: center; font-size: 0.85rem; color: var(--text);
-            opacity: 0.8; border-top: 1px solid var(--border);
+            padding: 40px; text-align: center; font-weight: 600; color: var(--sec);
+            font-size: 13px; border-top: 1px solid var(--border); margin-top: 50px;
         }
-
-        .heart { color: #ff3b30; }
     </style>
 </head>
 <body>
 
-    <header>
-        <a href="index.html" class="hub-link">🏠 TOOLBOX HUB</a>
-        <button class="theme-btn" onclick="toggleTheme()">🌓 Mode</button>
-    </header>
+<header>
+    <a href="index.html" class="hub-link">🏠 TOOLIFY HUB</a>
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <span style="font-size: 12px; font-weight: 800; color: var(--sec);">AI ACTIVE</span>
+        <button class="btn-small" onclick="toggleTheme()">🌓</button>
+    </div>
+</header>
 
-    <div class="container">
-        <h1>Grammar <span style="color:var(--primary)">Fixer</span></h1>
-        <p style="opacity: 0.6;">Enter your paragraph below to fix errors instantly.</p>
-
-        <div class="card">
-            <textarea id="inputText" placeholder="paste your messy text here... (e.g. i dont like apples they is bad)"></textarea>
-            <button class="btn-fix" onclick="processGrammar()">FIX PARAGRAPH</button>
-        </div>
-
-        <div class="result-box" id="resultContainer">
-            <div class="result-label">✨ Corrected Version</div>
-            <div class="output-area">
-                <button class="copy-btn" onclick="copyResult()">COPY</button>
-                <div id="outputText" style="line-height: 1.6;"></div>
-            </div>
-        </div>
+<div class="container">
+    <div class="tool-title">
+        <h1>Grammar <span style="color:var(--p)">Pro AI</span></h1>
+        <p style="color:var(--sec); font-weight: 600;">The ultimate grammar, tone, and vocabulary polisher.</p>
     </div>
 
-    <footer>
-        DEVELOPED WITH <span class="heart">❤</span> BY MOHAK
-    </footer>
+    <div class="card">
+        <div class="controls">
+            <select id="tone">
+                <option value="pro">Professional Tone</option>
+                <option value="casual">Friendly Tone</option>
+                <option value="academic">Academic Tone</option>
+            </select>
+            <button class="btn-small" onclick="clearText()">Clear</button>
+        </div>
+        
+        <textarea id="userInput" placeholder="Paste your paragraph here... (Errors: i dont think they is coming because it are raining...)" oninput="updateStats()"></textarea>
+        
+        <div class="stats">
+            <span id="wordCount">0 Words</span>
+            <span id="charCount">0 Characters</span>
+            <span id="readability">Ready</span>
+        </div>
 
-    <script>
-        // Theme Toggle Logic
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            const isDark = document.body.classList.contains('dark-mode');
-            localStorage.setItem('grammar_theme', isDark ? 'dark' : 'light');
+        <button class="main-btn" onclick="fixAll()">FIX & ENHANCE EVERYTHING</button>
+    </div>
+
+    <div class="result-area" id="resultArea">
+        <div style="font-size: 12px; font-weight: 800; color: var(--p); margin-bottom: 10px; text-transform: uppercase;">✨ Toolify AI Corrected Version</div>
+        <div class="output-box">
+            <button class="copy-tag" onclick="copyText()">COPY TEXT</button>
+            <div id="output"></div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    DEVELOPED WITH <span style="color: #ff3b30;">❤</span> BY MOHAK | © 2025 TOOLIFY HUB
+</footer>
+
+<script>
+    function toggleTheme() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('t_theme', document.body.classList.contains('dark-mode') ? 'dark' : 'light');
+    }
+    if(localStorage.getItem('t_theme') === 'dark') document.body.classList.add('dark-mode');
+
+    function updateStats() {
+        const text = document.getElementById('userInput').value.trim();
+        const words = text ? text.split(/\s+/).length : 0;
+        document.getElementById('wordCount').innerText = `${words} Words`;
+        document.getElementById('charCount').innerText = `${text.length} Characters`;
+    }
+
+    function clearText() {
+        document.getElementById('userInput').value = '';
+        document.getElementById('resultArea').style.display = 'none';
+        updateStats();
+    }
+
+    function fixAll() {
+        let t = document.getElementById('userInput').value;
+        if(!t.trim()) return alert("Please enter text!");
+        const tone = document.getElementById('tone').value;
+
+        // 1. Basic Formatting
+        t = t.trim().replace(/\s\s+/g, ' ');
+
+        // 2. THE MEGA LOGIC ENGINE (Grammar + Subject/Verb + Articles)
+        const rules = [
+            [/\bi(?=['\s]|$)/g, "I"], // Fix standalone 'i'
+            [/\bthey is\b/gi, "they are"],
+            [/\bit are\b/gi, "it is"],
+            [/\bi is\b/gi, "I am"],
+            [/\bwe was\b/gi, "we were"],
+            [/\byou was\b/gi, "you were"],
+            [/\bhe have\b/gi, "he has"],
+            [/\bshe have\b/gi, "she has"],
+            [/\bit have\b/gi, "it has"],
+            [/\bdont\b/gi, "don't"],
+            [/\bdoesnt\b/gi, "doesn't"],
+            [/\bcant\b/gi, "can't"],
+            [/\bwont\b/gi, "won't"],
+            [/\barent\b/gi, "aren't"],
+            [/\bisnt\b/gi, "isn't"],
+            [/\ba hour\b/gi, "an hour"],
+            [/\ba apple\b/gi, "an apple"],
+            [/\ba orange\b/gi, "an orange"],
+            [/\ba egg\b/gi, "an egg"],
+            [/\ba ice\b/gi, "an ice"],
+            [/\breally badly\b/gi, "really bad"],
+            [/\bit never come\b/gi, "it never came"],
+            [/\bno one want\b/gi, "no one wants"],
+            [/\bgonna\b/gi, "going to"],
+            [/\bwanna\b/gi, "want to"],
+            [/\bif i was you\b/gi, "if I were you"],
+            [/\b(he|she|it) don't\b/gi, "$1 doesn't"],
+            [/\bwas waiting for a hour\b/gi, "were waiting for an hour"]
+        ];
+
+        // 3. VOCABULARY ENHANCER (Only if Professional Tone)
+        if(tone === 'pro') {
+            const vocab = [
+                [/\bvery good\b/gi, "excellent"],
+                [/\bvery bad\b/gi, "terrible"],
+                [/\bhappy\b/gi, "delighted"],
+                [/\bsad\b/gi, "unfortunate"],
+                [/\bthink\b/gi, "believe"],
+                [/\bwatch movie\b/gi, "watch a movie"],
+                [/\bget wet\b/gi, "become drenched"]
+            ];
+            vocab.forEach(([r, v]) => t = t.replace(r, v));
         }
 
-        // Load saved theme
-        if(localStorage.getItem('grammar_theme') === 'dark') {
-            document.body.classList.add('dark-mode');
-        }
+        // Apply rules
+        rules.forEach(([r, v]) => t = t.replace(r, v));
 
-        function processGrammar() {
-            let input = document.getElementById("inputText").value;
-            if(!input.trim()) return alert("Please enter some text!");
+        // 4. Punctuation Spacing
+        t = t.replace(/,(?!\s)/g, ", ");
+        t = t.replace(/\.(?!\s)/g, ". ");
 
-            // 1. Basic cleanup: trim and fix double spaces
-            let text = input.trim().replace(/\s\s+/g, ' ');
+        // 5. Ultimate Sentence Capitalization
+        t = t.replace(/(^\w|\.\s+\w)/gm, s => s.toUpperCase());
 
-            // 2. Fix Capitalization (Start of sentences)
-            text = text.replace(/(^\w|\.\s+\w)/gm, m => m.toUpperCase());
+        document.getElementById('output').innerText = t;
+        document.getElementById('resultArea').style.display = 'block';
+    }
 
-            // 3. Fix common grammar/contraction slips
-            const map = {
-                " i ": " I ",
-                " dont ": " don't ",
-                " cant ": " can't ",
-                " isnt ": " isn't ",
-                " wouldnt ": " wouldn't ",
-                " couldnt ": " couldn't ",
-                " im ": " I'm ",
-                " youre ": " you're ",
-                " hes ": " he's ",
-                " shes ": " she's ",
-                " theyre ": " they're ",
-                " its ": " it's ",
-                " was nt ": " wasn't "
-            };
-
-            for (let [key, val] of Object.entries(map)) {
-                let regex = new RegExp(key, 'gi');
-                text = text.replace(regex, val);
-            }
-
-            // 4. Punctuation Spacing (Add space after commas/periods if missing)
-            text = text.replace(/,(?!\s)/g, ", ");
-            text = text.replace(/\.(?!\s)/g, ". ");
-
-            // 5. Basic Subject-Verb correction for "they is" or "i is"
-            text = text.replace(/\b(they|we|you) is\b/gi, "$1 are");
-            text = text.replace(/\bi is\b/gi, "I am");
-
-            document.getElementById("outputText").innerText = text;
-            document.getElementById("resultContainer").style.display = "block";
-        }
-
-        function copyResult() {
-            const text = document.getElementById("outputText").innerText;
-            navigator.clipboard.writeText(text);
-            alert("Copied to clipboard!");
-        }
-    </script>
+    function copyText() {
+        navigator.clipboard.writeText(document.getElementById('output').innerText);
+        alert("Enhanced text copied to clipboard!");
+    }
+</script>
 </body>
 </html>
