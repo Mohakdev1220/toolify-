@@ -3,26 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Grammar Pro | Toolify Hub</title>
+    <title>Grammar Fixer | Toolify Hub</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary: #00f2ff;
-            --bg: #0a0a0c;
-            --card: rgba(255, 255, 255, 0.05);
-            --border: rgba(255, 255, 255, 0.1);
+            --bg: #f8f9fa;
+            --card: #ffffff;
+            --text: #1a1a1a;
+            --primary: #0071e3;
+            --border: #d2d2d7;
+            --input-bg: #ffffff;
+        }
+
+        body.dark-mode {
+            --bg: #000000;
+            --card: #1c1c1e;
             --text: #ffffff;
+            --primary: #0a84ff;
+            --border: #38383a;
+            --input-bg: #2c2c2e;
         }
 
         body {
             margin: 0; padding: 0; font-family: 'Inter', sans-serif;
             background: var(--bg); color: var(--text);
-            display: flex; flex-direction: column; align-items: center; min-height: 100vh;
+            display: flex; flex-direction: column; align-items: center;
+            min-height: 100vh; transition: 0.3s;
         }
 
+        /* Navigation */
         header {
-            width: 100%; padding: 20px 40px; display: flex; justify-content: space-between;
-            align-items: center; box-sizing: border-box;
+            width: 100%; max-width: 900px; padding: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+            box-sizing: border-box;
         }
 
         .hub-link {
@@ -30,143 +43,161 @@
             border: 1px solid var(--primary); padding: 8px 16px; border-radius: 12px;
             font-size: 0.8rem; transition: 0.3s;
         }
-        .hub-link:hover { background: var(--primary); color: #000; box-shadow: 0 0 20px var(--primary); }
+        .hub-link:hover { background: var(--primary); color: white; }
 
-        .container {
-            width: 90%; max-width: 800px; margin-top: 40px; text-align: center;
+        .theme-btn {
+            background: var(--input-bg); border: 1px solid var(--border);
+            color: var(--text); padding: 8px 12px; border-radius: 10px;
+            cursor: pointer; font-size: 1rem;
         }
 
-        h1 { font-weight: 800; font-size: 2.5rem; margin-bottom: 10px; }
-        p.subtitle { color: #888; margin-bottom: 30px; }
+        /* Main Content */
+        .container {
+            width: 90%; max-width: 700px; margin-top: 40px; text-align: center;
+        }
 
-        .editor-box {
+        h1 { font-weight: 800; font-size: 2.5rem; margin-bottom: 10px; letter-spacing: -1px; }
+        
+        .card {
             background: var(--card); border: 1px solid var(--border);
-            border-radius: 24px; padding: 25px; backdrop-filter: blur(10px);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            border-radius: 24px; padding: 25px; margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
         textarea {
-            width: 100%; height: 200px; background: transparent; border: none;
-            color: white; font-size: 1.1rem; resize: none; outline: none;
-            line-height: 1.6; font-family: 'Inter', sans-serif;
+            width: 100%; height: 180px; background: var(--input-bg);
+            border: 1px solid var(--border); border-radius: 15px; padding: 15px;
+            color: var(--text); font-size: 1rem; resize: none; outline: none;
+            box-sizing: border-box; font-family: inherit; line-height: 1.5;
         }
 
-        .actions {
-            display: flex; gap: 15px; margin-top: 20px; justify-content: center;
+        .btn-fix {
+            width: 100%; padding: 18px; border-radius: 15px; border: none;
+            background: var(--primary); color: white; font-weight: 700;
+            font-size: 1rem; cursor: pointer; margin-top: 15px; transition: 0.3s;
         }
+        .btn-fix:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(0, 113, 227, 0.3); }
 
-        .btn {
-            padding: 14px 28px; border-radius: 12px; font-weight: 700;
-            cursor: pointer; transition: 0.3s; border: none; font-size: 1rem;
-        }
-        .btn-fix { background: var(--primary); color: #000; }
-        .btn-fix:hover { transform: scale(1.05); box-shadow: 0 0 25px var(--primary); }
-        .btn-clear { background: rgba(255,255,255,0.1); color: #fff; }
-
+        /* Results Box */
         .result-box {
-            margin-top: 30px; text-align: left; display: none;
-            animation: fadeIn 0.5s ease;
+            margin-top: 25px; text-align: left; display: none;
+            animation: slideUp 0.4s ease;
         }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .result-label { font-size: 0.8rem; color: var(--primary); text-transform: uppercase; margin-bottom: 10px; font-weight: 800; }
-        
-        .fixed-content {
-            background: rgba(0, 242, 255, 0.05); border: 1px solid var(--primary);
-            padding: 20px; border-radius: 16px; line-height: 1.6; position: relative;
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .result-label { font-size: 0.7rem; font-weight: 800; color: var(--primary); text-transform: uppercase; margin-bottom: 8px; }
+
+        .output-area {
+            background: var(--input-bg); border: 1.5px solid var(--primary);
+            padding: 20px; border-radius: 18px; position: relative;
         }
 
         .copy-btn {
-            position: absolute; top: 10px; right: 10px; background: var(--primary);
-            border: none; border-radius: 6px; padding: 5px 10px; font-size: 0.7rem;
+            position: absolute; top: 12px; right: 12px;
+            background: var(--primary); color: white; border: none;
+            padding: 6px 12px; border-radius: 8px; font-size: 0.7rem;
             font-weight: bold; cursor: pointer;
         }
 
+        /* Footer */
         footer {
-            margin-top: auto; padding: 40px; color: #555; font-size: 0.8rem;
-            letter-spacing: 2px;
+            margin-top: auto; width: 100%; padding: 40px 0;
+            text-align: center; font-size: 0.85rem; color: var(--text);
+            opacity: 0.8; border-top: 1px solid var(--border);
         }
+
+        .heart { color: #ff3b30; }
     </style>
 </head>
 <body>
 
     <header>
-        <div style="font-weight: 800; font-size: 1.2rem;">Tool<span style="color:var(--primary)">ify</span></div>
-        <a href="index.html" class="hub-link">← BACK TO HUB</a>
+        <a href="index.html" class="hub-link">🏠 TOOLBOX HUB</a>
+        <button class="theme-btn" onclick="toggleTheme()">🌓 Mode</button>
     </header>
 
     <div class="container">
-        <h1>Grammar <span style="color:var(--primary)">Pro</span></h1>
-        <p class="subtitle">Paste your paragraph and let the AI fix it instantly.</p>
+        <h1>Grammar <span style="color:var(--primary)">Fixer</span></h1>
+        <p style="opacity: 0.6;">Enter your paragraph below to fix errors instantly.</p>
 
-        <div class="editor-box">
-            <textarea id="userInput" placeholder="Type or paste your messy paragraph here..."></textarea>
-            <div class="actions">
-                <button class="btn btn-clear" onclick="clearAll()">Clear</button>
-                <button class="btn btn-fix" onclick="fixGrammar()">FIX EVERYTHING</button>
-            </div>
+        <div class="card">
+            <textarea id="inputText" placeholder="paste your messy text here... (e.g. i dont like apples they is bad)"></textarea>
+            <button class="btn-fix" onclick="processGrammar()">FIX PARAGRAPH</button>
         </div>
 
-        <div class="result-box" id="resultBox">
-            <div class="result-label">✨ Polished Version</div>
-            <div class="fixed-content">
-                <p id="fixedText"></p>
-                <button class="copy-btn" onclick="copyText()">COPY</button>
+        <div class="result-box" id="resultContainer">
+            <div class="result-label">✨ Corrected Version</div>
+            <div class="output-area">
+                <button class="copy-btn" onclick="copyResult()">COPY</button>
+                <div id="outputText" style="line-height: 1.6;"></div>
             </div>
         </div>
     </div>
 
-    <footer>DEVELOPED WITH ♥ BY MOHAK</footer>
+    <footer>
+        DEVELOPED WITH <span class="heart">❤</span> BY MOHAK
+    </footer>
 
     <script>
-        function fixGrammar() {
-            let text = document.getElementById("userInput").value;
-            if (!text.trim()) return alert("Please enter some text first!");
+        // Theme Toggle Logic
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            const isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('grammar_theme', isDark ? 'dark' : 'light');
+        }
 
-            // 1. Basic Cleaning
-            let fixed = text.trim();
-            
-            // Fix double spaces
-            fixed = fixed.replace(/\s\s+/g, ' ');
-            
-            // Fix Capitalization: Capitalize first letter of every sentence
-            fixed = fixed.replace(/(^\w|\.\s+\w)/gm, m => m.toUpperCase());
+        // Load saved theme
+        if(localStorage.getItem('grammar_theme') === 'dark') {
+            document.body.classList.add('dark-mode');
+        }
 
-            // Fix Punctuation: Add space after commas/periods if missing
-            fixed = fixed.replace(/,(?!\s)/g, ", ");
-            fixed = fixed.replace(/\.(?!\s)/g, ". ");
+        function processGrammar() {
+            let input = document.getElementById("inputText").value;
+            if(!input.trim()) return alert("Please enter some text!");
 
-            // Fix common mistakes (I am -> I'm, wont -> won't, etc)
-            const replacements = {
+            // 1. Basic cleanup: trim and fix double spaces
+            let text = input.trim().replace(/\s\s+/g, ' ');
+
+            // 2. Fix Capitalization (Start of sentences)
+            text = text.replace(/(^\w|\.\s+\w)/gm, m => m.toUpperCase());
+
+            // 3. Fix common grammar/contraction slips
+            const map = {
                 " i ": " I ",
                 " dont ": " don't ",
                 " cant ": " can't ",
-                " wont ": " won't ",
+                " isnt ": " isn't ",
+                " wouldnt ": " wouldn't ",
+                " couldnt ": " couldn't ",
                 " im ": " I'm ",
+                " youre ": " you're ",
                 " hes ": " he's ",
                 " shes ": " she's ",
-                " its ": " it's ",
                 " theyre ": " they're ",
-                " youve ": " you've "
+                " its ": " it's ",
+                " was nt ": " wasn't "
             };
 
-            for (let key in replacements) {
-                let reg = new RegExp(key, 'gi');
-                fixed = fixed.replace(reg, replacements[key]);
+            for (let [key, val] of Object.entries(map)) {
+                let regex = new RegExp(key, 'gi');
+                text = text.replace(regex, val);
             }
 
-            // Display result
-            document.getElementById("fixedText").innerText = fixed;
-            document.getElementById("resultBox").style.display = "block";
+            // 4. Punctuation Spacing (Add space after commas/periods if missing)
+            text = text.replace(/,(?!\s)/g, ", ");
+            text = text.replace(/\.(?!\s)/g, ". ");
+
+            // 5. Basic Subject-Verb correction for "they is" or "i is"
+            text = text.replace(/\b(they|we|you) is\b/gi, "$1 are");
+            text = text.replace(/\bi is\b/gi, "I am");
+
+            document.getElementById("outputText").innerText = text;
+            document.getElementById("resultContainer").style.display = "block";
         }
 
-        function clearAll() {
-            document.getElementById("userInput").value = "";
-            document.getElementById("resultBox").style.display = "none";
-        }
-
-        function copyText() {
-            const text = document.getElementById("fixedText").innerText;
+        function copyResult() {
+            const text = document.getElementById("outputText").innerText;
             navigator.clipboard.writeText(text);
             alert("Copied to clipboard!");
         }
