@@ -263,7 +263,7 @@ function renderHistory(){
 async function generateImage(){
     const p = promptInput.value.trim();
     
-    // Validations
+    // 1. Validations
     if(!p) { alert("Please enter a description!"); return; }
     if(getUsage() >= DAILY_LIMIT){ alert("Daily limit reached! Try again tomorrow."); return; }
 
@@ -277,12 +277,15 @@ async function generateImage(){
     const mode = document.getElementById("mode").value;
     const finalPrompt = style ? `${p}, ${style}` : p;
 
-    // UI State: Start Loading
+    // 2. UI State: Start Loading
     generateBtn.disabled = true;
-    generateBtn.innerText = "Connecting to AI...";
+    generateBtn.innerText = "Generating Art...";
     generateBtn.classList.add("loading-pulse");
-    loader.innerHTML = "<span>✨ Magic is happening (10-15s)...</span>";
-    imageBox.style.opacity = "0.5";
+    loader.innerHTML = "<span>✨ AI is thinking... (Usually 5-10 seconds)</span>";
+    
+    // Clear previous image and show loading placeholder
+    imageBox.innerHTML = `<div style="padding: 40px; border: 2px dashed rgba(255,255,255,0.1); border-radius: 15px;">⏳ Processing Image Data...</div>`;
+    imageBox.style.opacity = "0.7";
 
     try {
         const response = await fetch(WORKER_URL, {
@@ -290,45 +293,64 @@ async function generateImage(){
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ 
                 prompt: finalPrompt,
-                mode: mode // Passing mode to worker if needed
+                mode: mode 
             }),
-            // Timeout handling
             signal: AbortSignal.timeout(60000) 
         });
 
         if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Worker Error: ${response.status} - ${errorText}`);
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Server Error: ${response.status}`);
         }
 
         const data = await response.json();
 
-        if(data.image) {
+        // 3. Validation for Blank/Empty Data
+        if(data.image && data.image.length > 100) {
             // Success: Render Image
             imageBox.style.opacity = "1";
             imageBox.innerHTML = `
-                <div style="margin-top:20px; animation: imgAppear 0.5s ease;">
-                    <img src="${data.image}" alt="Generated AI Art" style="max-width:100%; border-radius:15px; border: 2px solid rgba(255,255,255,0.1);">
+                <div style="margin-top:20px; animation: fadeIn 0.8s ease-out;">
+                    <img src="${data.image}" 
+                         alt="Generated AI Art" 
+                         id="finalImage"
+                         style="max-width:100%; border-radius:15px; border: 2px solid rgba(255,255,255,0.1); display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
+                    <div id="imgLoader" style="padding:20px;">Rendering Pixels...</div>
                     <br>
-                    <a class="download-btn" href="${data.image}" download="ai-art-${Date.now()}.png">⬇ Download Masterpiece</a>
+                    <a class="download-btn" id="dlBtn" href="${data.image}" download="ai-art-${Date.now()}.png" style="display:none;">⬇ Download Image</a>
                 </div>
             `;
+
+            // Wait for the image to actually load in browser before showing
+            const finalImg = document.getElementById("finalImage");
+            finalImg.onload = function() {
+                document.getElementById("imgLoader").style.display = "none";
+                finalImg.style.display = "block";
+                document.getElementById("dlBtn").style.display = "inline-block";
+                console.log("Image rendered successfully.");
+            };
+
             incUsage();
             updateLimit();
             saveHistory(p);
         } else {
-            throw new Error("Invalid response format from Worker");
+            throw new Error("Worker returned an empty or invalid image.");
         }
 
     } catch (err) {
         console.error("Full Error Info:", err);
         let msg = "Generation failed.";
-        if(err.name === 'TimeoutError') msg = "Request took too long. Try again.";
-        else if(err.message.includes("Failed to fetch")) msg = "Cannot connect to Worker. Check CORS or URL.";
+        
+        if(err.name === 'TimeoutError') msg = "Request took too long. Try a shorter prompt.";
+        else if(err.message.includes("Failed to fetch")) msg = "Network error or CORS block. Check Worker URL.";
         else msg = err.message;
         
         alert("❌ " + msg);
-        imageBox.innerHTML = `<p style="color:#ff5e5e;">Error: ${msg}</p>`;
+        imageBox.innerHTML = `
+            <div style="color:#ff5e5e; padding: 20px; border: 1px solid #ff5e5e; border-radius: 12px; background: rgba(255,94,94,0.1);">
+                <b>Error:</b> ${msg}
+            </div>
+        `;
     } finally {
         generateBtn.disabled = false;
         generateBtn.innerText = "Generate Art";
@@ -336,7 +358,6 @@ async function generateImage(){
         loader.innerText = "";
     }
 }
-
 // Initialize
 updateLimit();
 renderHistory();
