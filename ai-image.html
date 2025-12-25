@@ -6,194 +6,317 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
+:root {
+  --primary: #00d4ff;
+  --secondary: #00ff99;
+  --danger: #ff5e5e;
+  --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+}
+
 body {
   margin: 0;
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg-gradient);
   color: #fff;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
 .container {
-  max-width: 900px;
-  margin: auto;
+  width: 100%;
+  max-width: 600px;
   padding: 20px;
+  animation: fadeIn 0.8s ease-out;
 }
-h1 { text-align: center; }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+h1 { 
+  text-align: center; 
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
 .card {
-  background: rgba(255,255,255,0.08);
-  border-radius: 14px;
-  padding: 20px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 30px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2);
 }
+
 textarea, select, button {
   width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 10px;
+  padding: 14px;
+  margin-top: 15px;
+  border-radius: 12px;
   border: none;
-  font-size: 15px;
+  font-size: 16px;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
 }
-button {
-  background: #00d4ff;
-  font-weight: bold;
+
+textarea {
+  background: rgba(0, 0, 0, 0.2);
+  color: white;
+  resize: vertical;
+  min-height: 80px;
+}
+
+select {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
   cursor: pointer;
 }
-button:disabled { background:#555; }
-#imageBox { text-align:center; margin-top:20px; }
-#imageBox img { max-width:100%; border-radius:14px; }
+
+select option { background: #203a43; }
+
+button {
+  background: var(--primary);
+  color: #000;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 25px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 212, 255, 0.4);
+}
+
+button:active { transform: translateY(0); }
+
+button:disabled { 
+  background: #555; 
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+/* Loading Animation */
+.loading-pulse {
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+#imageBox { 
+  text-align:center; 
+  margin-top:25px; 
+}
+
+#imageBox img { 
+  max-width:100%; 
+  border-radius:14px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  animation: imgAppear 0.5s ease-in;
+}
+
+@keyframes imgAppear {
+  from { opacity: 0; scale: 0.9; }
+  to { opacity: 1; scale: 1; }
+}
+
 .download-btn {
   display:inline-block;
-  margin-top:10px;
-  padding:10px 16px;
-  background:#00ff99;
+  margin-top:15px;
+  padding:12px 24px;
+  background: var(--secondary);
   color:#000;
   text-decoration:none;
   border-radius:10px;
   font-weight:bold;
-  button.loading {
-  background: #ffdd00 !important;  /* Change to yellow when generating */
-  color: #000;
-  cursor: wait;
+  transition: 0.3s;
 }
 
-}
 .back-btn {
-  display:inline-block;
-  margin-top:15px;
-  padding:10px 16px;
-  background:#ff5e5e;
-  color:#fff;
-  border-radius:10px;
-  text-decoration:none;
-  font-weight:bold;
-}
-.limit, .loader { text-align:center; margin-top:10px; font-size:14px; }
-.history {
-  margin-top: 15px;
-  font-size: 13px;
-  opacity: 0.9;
-}
-.history span {
   display:block;
-  cursor:pointer;
-  margin-top:5px;
-  text-decoration: underline;
+  text-align: center;
+  margin-top:20px;
+  padding:10px;
+  color: #bbb;
+  text-decoration:none;
+  font-size: 14px;
 }
+
+.back-btn:hover { color: var(--danger); }
+
+.limit { text-align:center; margin-top:15px; font-size:13px; color: #aaa; }
+
+.history {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.history b { display: block; margin-bottom: 8px; font-size: 14px; color: var(--primary); }
+
+.history span {
+  display: inline-block;
+  background: rgba(255,255,255,0.05);
+  padding: 5px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 3px;
+  font-size: 12px;
+  transition: 0.2s;
+}
+
+.history span:hover { background: rgba(255,255,255,0.2); }
+
+.loader { margin-top: 10px; color: var(--primary); font-weight: bold; }
 </style>
 </head>
 
 <body>
 <div class="container">
-<h1>🧠 AI Image Generator</h1>
+  <h1>🧠 AI Creator</h1>
 
-<div class="card">
-<textarea id="prompt" placeholder="Describe your image..."></textarea>
+  <div class="card">
+    <textarea id="prompt" placeholder="Describe the image you want to create..."></textarea>
 
-<select id="style">
-  <option value="">No Style</option>
-  <option value="anime style">Anime</option>
-  <option value="realistic photo">Realistic</option>
-  <option value="cyberpunk futuristic">Cyberpunk</option>
-</select>
+    <div style="display: flex; gap: 10px;">
+      <select id="style">
+        <option value="">No Style</option>
+        <option value="anime style, high resolution">Anime</option>
+        <option value="photorealistic, 8k, highly detailed">Realistic</option>
+        <option value="cyberpunk, neon lighting, futuristic">Cyberpunk</option>
+        <option value="oil painting, textured, artistic">Oil Painting</option>
+      </select>
 
-<select id="mode">
-  <option value="fast">⚡ Fast Mode</option>
-  <option value="hq">💎 HQ Mode</option>
-</select>
+      <select id="mode">
+        <option value="fast">⚡ Fast</option>
+        <option value="hq">💎 HQ</option>
+      </select>
+    </div>
 
-<button id="generateBtn" onclick="generateImage()">Generate Image</button>
+    <button id="generateBtn" onclick="generateImage()">Generate Art</button>
 
-<div class="loader" id="loader"></div>
-<div class="limit" id="limitText"></div>
-<div class="history" id="history"></div>
+    <div class="loader" id="loader"></div>
+    <div class="limit" id="limitText"></div>
+    
+    <div class="history" id="history"></div>
 
-<!-- BACK TO TOOLBOX HUB BUTTON -->
-<a class="back-btn" href="index.html">⬅ Back to Toolbox Hub</a>
+    <a class="back-btn" href="index.html">← Back to Toolbox Hub</a>
+  </div>
 
-</div>
-
-<div id="imageBox"></div>
+  <div id="imageBox"></div>
 </div>
 
 <script>
 const WORKER_URL = "https://wispy-limit-562f.mohakchoubey.workers.dev/";
 const DAILY_LIMIT = 4;
+const bannedWords = ["nude","sex","porn","breast","xxx","adult","erotic","nsfw"];
 
-// 🚫 NSFW WORDS
-const bannedWords = [
-  "nude","sex","porn","breast","xxx","adult","erotic","nsfw"
-];
+const promptInput = document.getElementById("prompt");
+const generateBtn = document.getElementById("generateBtn");
+const loader = document.getElementById("loader");
+const limitText = document.getElementById("limitText");
+const historyBox = document.getElementById("history");
+const imageBox = document.getElementById("imageBox");
 
 function todayKey(){ return "ai_"+new Date().toISOString().slice(0,10); }
 function getUsage(){ return parseInt(localStorage.getItem(todayKey())||"0"); }
 function incUsage(){ localStorage.setItem(todayKey(),getUsage()+1); }
-function updateLimit(){ limitText.innerText=`Daily limit: ${getUsage()} / ${DAILY_LIMIT}`; }
-updateLimit();
+function updateLimit(){ limitText.innerText=`Daily Uses: ${getUsage()} / ${DAILY_LIMIT}`; }
 
-// 🕘 Prompt history
 function saveHistory(text){
   let h = JSON.parse(localStorage.getItem("history")||"[]");
-  h.unshift(text);
-  h = h.slice(0,5);
-  localStorage.setItem("history",JSON.stringify(h));
-  renderHistory();
+  if(!h.includes(text)) {
+    h.unshift(text);
+    h = h.slice(0,5);
+    localStorage.setItem("history",JSON.stringify(h));
+    renderHistory();
+  }
 }
+
 function renderHistory(){
   let h = JSON.parse(localStorage.getItem("history")||"[]");
-  history.innerHTML = "<b>Prompt History:</b>";
+  if(h.length === 0) return;
+  historyBox.innerHTML = "<b>Recent Prompts:</b>";
   h.forEach(p=>{
     let s=document.createElement("span");
-    s.innerText=p;
-    s.onclick=()=>prompt.value=p;
-    history.appendChild(s);
+    s.innerText= p.length > 20 ? p.substring(0,20) + "..." : p;
+    s.onclick=()=> promptInput.value=p;
+    historyBox.appendChild(s);
   });
 }
-renderHistory();
 
 async function generateImage(){
-  if(getUsage()>=DAILY_LIMIT){ alert("Daily limit reached (4 images)"); return; }
+  const p = promptInput.value.trim();
+  
+  if(!p) { alert("Please enter a description"); return; }
+  if(getUsage() >= DAILY_LIMIT){ alert("Daily limit reached (4 images)"); return; }
 
-  let p = prompt.value.trim().toLowerCase();
-  if(!p) return alert("Enter prompt");
-
+  const cleanP = p.toLowerCase();
   for(let w of bannedWords){
-    if(p.includes(w)){ alert("NSFW content not allowed 🚫"); return; }
+    if(cleanP.includes(w)){ alert("Content policy violation 🚫"); return; }
   }
 
   const style = document.getElementById("style").value;
   const mode = document.getElementById("mode").value;
+  const finalPrompt = style ? `${p}, ${style}` : p;
 
-  let steps = mode==="fast" ? 20 : 40;
-  let size  = mode==="fast" ? "512x512" : "1024x1024";
+  // UI State: Loading
+  generateBtn.disabled = true;
+  generateBtn.innerText = "Creating...";
+  generateBtn.classList.add("loading-pulse");
+  loader.innerText = "✨ Magic is happening...";
+  imageBox.innerHTML = "";
 
-  let finalPrompt = style ? `${prompt.value}, ${style}` : prompt.value;
-
-  loader.innerText="⏳ Generating...";
-  generateBtn.disabled=true;
-
-  try{
-    const res = await fetch(WORKER_URL,{
+  try {
+    const res = await fetch(WORKER_URL, {
       method:"POST",
       headers:{ "Content-Type":"application/json" },
-      body:JSON.stringify({ prompt: finalPrompt, steps, size })
+      body:JSON.stringify({ 
+        prompt: finalPrompt, 
+        steps: mode === "fast" ? 20 : 40, 
+        size: mode === "fast" ? "512x512" : "1024x1024" 
+      })
     });
+    
     const data = await res.json();
 
-    imageBox.innerHTML=`
-      <img src="${data.image}">
-      <br>
-      <a class="download-btn" href="${data.image}" download>⬇ Download</a>
-    `;
+    if(data.image) {
+      imageBox.innerHTML = `
+        <img src="${data.image}" alt="Generated AI Art">
+        <br>
+        <a class="download-btn" href="${data.image}" target="_blank" download="ai-image.png">⬇ Download Image</a>
+      `;
+      incUsage();
+      updateLimit();
+      saveHistory(p);
+    } else {
+      throw new Error("No image data");
+    }
 
-    incUsage();
-    updateLimit();
-    saveHistory(prompt.value);
-
-  }catch{
-    alert("Error generating image");
+  } catch (err) {
+    alert("Generation failed. Please check your Worker URL or connection.");
+    console.error(err);
+  } finally {
+    generateBtn.disabled = false;
+    generateBtn.innerText = "Generate Art";
+    generateBtn.classList.remove("loading-pulse");
+    loader.innerText = "";
   }
-
-  loader.innerText="";
-  generateBtn.disabled=false;
 }
+
+// Init
+updateLimit();
+renderHistory();
 </script>
 </body>
 </html>
