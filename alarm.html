@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alarm Clock | Toolbox Hub</title>
+    <style>
+        /* COMPLETE STYLE SECTION - ONLY PLACEHOLDER COLOR FIXED */
+
+:root {
+    --glass: rgba(255, 255, 255, 0.12);
+    --primary: #7efaff;
+    --danger: #ff6b6b;
+    --success: #04AA6D;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    color: white;
+    min-height: 100vh;
+    background: linear-gradient(-45deg, #1e3c72, #2a5298, #141e30);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    overflow-x: hidden;
+}
+
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* NAVBAR - FIXED AT TOP */
+.topnav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: var(--glass);
+    backdrop-filter: blur(25px);
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    gap: 2px;
+}
+
+.topnav a {
+    color: #f2f2f2;
+    padding: 14px 20px;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 8px 8px 0 0;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.topnav a:hover {
+    background: rgba(255,255,255,0.2);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.topnav a.active {
+    background: var(--success);
+    color: white;
+}
+
+/* MAIN CONTENT */
+.main-content {
+    padding-top: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+    gap: 30px;
+}
+
+.back-btn {
+    position: fixed;
+    top: 90px;
+    right: 20px;
+    background: var(--glass);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 12px 24px;
+    border-radius: 12px;
+    color: white;
+    text-decoration: none;
+    backdrop-filter: blur(10px);
+    font-weight: 600;
+    transition: all 0.3s ease;
+    z-index: 999;
+}
+.back-btn:hover { 
+    background: rgba(255,255,255,0.2); 
+    transform: translateY(-3px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+}
+
+.alarm-container {
+    background: var(--glass);
+    backdrop-filter: blur(25px);
+    border: 1px solid rgba(255,255,255,0.15);
+    padding: 50px 80px;
+    border-radius: 40px;
+    text-align: center;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+    max-width: 90vw;
+}
+
+.current-time {
+    font-size: clamp(50px, 12vw, 100px);
+    font-weight: 800;
+    font-family: 'Courier New', Courier, monospace;
+    color: var(--primary);
+    text-shadow: 0 0 30px rgba(126, 250, 255, 0.5);
+    margin-bottom: 30px;
+}
+
+.time-input-group {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 30px 0;
+}
+
+.time-input {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 15px 20px;
+    border-radius: 15px;
+    color: white;
+    font-size: 24px;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    width: 80px;
+    text-align: center;
+}
+
+.time-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 20px rgba(126, 250, 255, 0.3);
+}
+
+/* FIXED PLACEHOLDER COLOR FOR TIME INPUTS */
+.time-input::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+    opacity: 1 !important;
+}
+
+.time-input::-webkit-input-placeholder { 
+    color: rgba(255, 255, 255, 0.7) !important; 
+}
+
+.time-input::-moz-placeholder { 
+    color: rgba(255, 255, 255, 0.7) !important; 
+}
+
+.time-input:-ms-input-placeholder { 
+    color: rgba(255, 255, 255, 0.7) !important; 
+}
+
+.label-input {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.3);
+    padding: 15px 25px;
+    border-radius: 15px;
+    color: white;
+    font-size: 18px;
+    backdrop-filter: blur(10px);
+    width: 250px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+/* FIXED PLACEHOLDER COLOR FOR LABEL INPUT */
+.label-input::placeholder {
+    color: rgba(255, 255, 255, 0.7) !important;
+    opacity: 1 !important;
+}
+
+.label-input::-webkit-input-placeholder { 
+    color: rgba(255, 255, 255, 0.7) !important; 
+}
+
+.label-input::-moz-placeholder { 
+    color: rgba(255, 255, 255, 0.7) !important; 
+}
+
+.label-input:-ms-input-placeholder { 
+    color: rgba(255, 255, 255, 0.7) !important; 
+}
+
+.set-alarm-btn {
+    background: linear-gradient(45deg, var(--success), #04D65F);
+    border: none;
+    padding: 18px 40px;
+    border-radius: 25px;
+    color: white;
+    font-size: 20px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(4, 170, 109, 0.4);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 20px;
+}
+
+.set-alarm-btn:hover:not(:disabled) {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 40px rgba(4, 170, 109, 0.6);
+}
+
+.set-alarm-btn:disabled {
+    background: #666;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.alarm-list {
+    margin-top: 30px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.alarm-item {
+    background: rgba(255,255,255,0.1);
+    padding: 15px 20px;
+    border-radius: 15px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.del-btn {
+    background: var(--danger);
+    border: none;
+    color: white;
+    padding: 8px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+/* OVERLAY FOR RINGING ALARM */
+.overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.9);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    backdrop-filter: blur(10px);
+}
+
+.overlay.active {
+    display: flex;
+}
+
+.ring-icon {
+    font-size: 6rem;
+    margin-bottom: 20px;
+    animation: ring 0.6s infinite;
+}
+
+@keyframes ring {
+    0%, 100% { transform: rotate(0deg) scale(1); }
+    25% { transform: rotate(10deg) scale(1.1); }
+    75% { transform: rotate(-10deg) scale(1.1); }
+}
+
+.overlay-time {
+    font-size: 4rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 10px;
+    text-shadow: 0 0 30px rgba(126, 250, 255, 0.8);
+}
+
+.overlay-label {
+    font-size: 1.5rem;
+    margin-bottom: 30px;
+}
+
+.overlay-btns {
+    display: flex;
+    gap: 20px;
+}
+
+.overlay-btn {
+    padding: 20px 40px;
+    border-radius: 25px;
+    border: none;
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.stop-btn {
+    background: var(--danger);
+}
+
+.snooze-btn {
+    background: var(--success);
+}
+
+.overlay-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+}
+
+.alarm-status {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    min-height: 20px;
+}
+
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="topnav">
+ <a href="clock.html">Clock</a>
+        <a href="stopwatch.html">Stopwatch</a>
+        <a href="timer.html">Timer</a>
+        
+ <a href="alarm.html" class="active">Alarm</a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <a href="index.html" class="back-btn">🏠 Back to Hub</a>
+        
+        <div class="alarm-container">
+            <div class="current-time" id="currentTime">00:00:00</div>
+            
+            <div class="time-input-group">
+                <input type="number" class="time-input" id="hourInput" min="0" max="23" placeholder="HH">
+                <span>:</span>
+                <input type="number" class="time-input" id="minuteInput" min="0" max="59" placeholder="MM">
+            </div>
+            
+            <input type="text" class="label-input" id="labelInput" placeholder="Alarm Label (e.g. Wake Up)">
+            <button class="set-alarm-btn" id="setBtn" onclick="saveAlarm()">SET ALARM</button>
+            
+            <div class="alarm-status" id="status"></div>
+            <div class="alarm-list" id="alarmList"></div>
+        </div>
+    </main>
+
+    <!-- ALARM OVERLAY -->
+    <div class="overlay" id="overlay">
+        <div class="ring-icon">⏰</div>
+        <div class="overlay-time" id="overlayTime">00:00</div>
+        <div class="overlay-label" id="overlayLabel">Alarm!</div>
+        <div class="overlay-btns">
+            <button class="overlay-btn stop-btn" onclick="stopAlarm()">STOP</button>
+            <button class="overlay-btn snooze-btn" onclick="snoozeAlarm()">SNOOZE</button>
+        </div>
+    </div>
+
+    <script>
+        let alarms = JSON.parse(localStorage.getItem("toolbox_alarms") || "[]");
+        let activeAlarmId = null;
+        let alarmSound = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAo');
+
+        function updateCurrentTime() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], {hour12: false});
+            document.getElementById("currentTime").textContent = timeStr;
+        }
+
+        function saveAlarm() {
+            const hour = document.getElementById("hourInput").value;
+            const minute = document.getElementById("minuteInput").value;
+            const label = document.getElementById("labelInput").value || "Alarm";
+            
+            if (!hour || !minute || hour > 23 || minute > 59) {
+                document.getElementById("status").textContent = "Please enter valid time!";
+                return;
+            }
+            
+            const time = `${hour.padStart(2, '0')}:${minute.padStart(2, '0')}`;
+            alarms.push({ id: Date.now(), time, label, triggered: false });
+            localStorage.setItem("toolbox_alarms", JSON.stringify(alarms));
+            renderAlarms();
+            document.getElementById("status").textContent = `Alarm set for ${time}!`;
+            clearInputs();
+        }
+
+        function clearInputs() {
+            document.getElementById("hourInput").value = "";
+            document.getElementById("minuteInput").value = "";
+            document.getElementById("labelInput").value = "";
+        }
+
+        function renderAlarms() {
+            const list = document.getElementById("alarmList");
+            list.innerHTML = "";
+            alarms.sort((a,b) => a.time.localeCompare(b.time)).forEach(alarm => {
+                const div = document.createElement("div");
+                div.className = "alarm-item";
+                div.innerHTML = `
+                    <div>
+                        <strong>${alarm.time}</strong><br>
+                        <small>${alarm.label}</small>
+                    </div>
+                    <button class="del-btn" onclick="deleteAlarm(${alarm.id})">Delete</button>
+                `;
+                list.appendChild(div);
+            });
+        }
+
+        function deleteAlarm(id) {
+            alarms = alarms.filter(a => a.id !== id);
+            localStorage.setItem("toolbox_alarms", JSON.stringify(alarms));
+            renderAlarms();
+        }
+
+        function checkAlarms() {
+            const now = new Date();
+            const timeStr = now.toLocaleTimeString([], {hour12: false}).slice(0,5);
+            
+            alarms.forEach(alarm => {
+                if (alarm.time === timeStr && !alarm.triggered) {
+                    triggerAlarm(alarm);
+                    alarm.triggered = true;
+                }
+                // Reset triggered flag for next day
+                if (alarm.time < timeStr) alarm.triggered = false;
+            });
+        }
+
+        function triggerAlarm(alarm) {
+            activeAlarmId = alarm.id;
+            alarmSound.play().catch(e => console.log("Audio play failed"));
+            document.getElementById("overlayTime").textContent = alarm.time;
+            document.getElementById("overlayLabel").textContent = alarm.label;
+            document.getElementById("overlay").classList.add("active");
+            document.getElementById("status").textContent = `${alarm.label} is ringing!`;
+        }
+
+        function stopAlarm() {
+            alarmSound.pause();
+            alarmSound.currentTime = 0;
+            document.getElementById("overlay").classList.remove("active");
+            document.getElementById("status").textContent = "Alarm stopped";
+        }
+
+        function snoozeAlarm() {
+            const current = alarms.find(a => a.id === activeAlarmId);
+            stopAlarm();
+            if (current) {
+                const [h, m] = current.time.split(":").map(Number);
+                const newM = m + 10;
+                const newH = h + Math.floor(newM / 60);
+                const snoozeTime = `${newH.toString().padStart(2,'0')}:${(newM % 60).toString().padStart(2,'0')}`;
+                alarms.push({ 
+                    id: Date.now(), 
+                    time: snoozeTime, 
+                    label: `${current.label} (Snooze)`, 
+                    triggered: false 
+                });
+                localStorage.setItem("toolbox_alarms", JSON.stringify(alarms));
+                renderAlarms();
+            }
+        }
+
+        // Initialize
+        setInterval(() => {
+            updateCurrentTime();
+            checkAlarms();
+        }, 1000);
+        
+        updateCurrentTime();
+        renderAlarms();
+    </script>
+</body>
+</html>

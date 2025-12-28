@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock | Toolbox Hub</title>
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.12);
+            --primary: #7efaff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            color: white;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #1e3c72, #2a5298, #141e30);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* NAVBAR - FIXED AT TOP */
+        .topnav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+            z-index: 1000;
+            display: flex; /* FLEX MAGIC! */
+            justify-content: center;
+            gap: 2px;
+        }
+
+        .topnav a {
+            color: #f2f2f2;
+            padding: 14px 20px;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .topnav a:hover {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .topnav a.active {
+            background: #04AA6D;
+            color: white;
+        }
+
+        /* MAIN CONTENT - PADDING FOR NAVBAR */
+        .main-content {
+            padding-top: 80px; /* navbar height + space */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .back-btn {
+            position: fixed;
+            top: 90px; /* navbar के नीचे */
+            right: 20px;
+            background: var(--glass);
+            border: 1px solid rgba(255,255,255,0.2);
+            padding: 12px 24px;
+            border-radius: 12px;
+            color: white;
+            text-decoration: none;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            transition: all 0.3s ease;
+            z-index: 999;
+        }
+        .back-btn:hover { 
+            background: rgba(255,255,255,0.2); 
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+
+        .clock-container {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 50px 80px;
+            border-radius: 40px;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            max-width: 90vw;
+        }
+
+        #clock {
+            font-size: clamp(60px, 15vw, 150px);
+            font-weight: 800;
+            font-family: 'Courier New', Courier, monospace;
+            letter-spacing: 5px;
+            color: var(--primary);
+            text-shadow: 0 0 30px rgba(126, 250, 255, 0.5);
+            margin-bottom: 10px;
+        }
+
+        .date-display {
+            font-size: 1.2rem;
+            opacity: 0.8;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+    <!-- NAVBAR -->
+    <nav class="topnav">
+        <a class="active" href="clock.html">Clock</a>
+        <a href="stopwatch.html">Stopwatch</a>
+        <a href="timer.html">Timer</a>
+        <a href="alarm.html">Alarm</a>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+        <a href="index.html" class="back-btn">🏠 Back to Hub</a>
+        
+        <div class="clock-container">
+            <div id="clock">00:00:00</div>
+            <div class="date-display" id="date">Loading Date...</div>
+        </div>
+    </main>
+
+    <script>
+        function updateClock() {
+            let now = new Date();
+            let h = now.getHours().toString().padStart(2, "0");
+            let m = now.getMinutes().toString().padStart(2, "0");
+            let s = now.getSeconds().toString().padStart(2, "0");
+            document.getElementById("clock").innerText = `${h}:${m}:${s}`;
+
+            let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById("date").innerText = now.toLocaleDateString('en-US', options);
+        }
+
+        setInterval(updateClock, 1000);
+        updateClock();
+    </script>
+</body>
+</html>
