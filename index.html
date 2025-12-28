@@ -245,7 +245,7 @@
         }
         .user-img:hover { transform: scale(1.1); }
 
-        /* ✅ NEW FEEDBACK MODAL STYLES */
+        /* FEEDBACK MODAL STYLES */
         .feedback-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 3000;
             opacity: 0; visibility: hidden; transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -299,9 +299,8 @@
             transform: translateY(-2px); box-shadow: 0 10px 30px var(--primary-glow); 
         }
         
-        .feedback-success {
-            padding: 40px 30px; text-align: center; color: var(--primary); font-weight: 600;
-            font-size: 1.1rem; display: none;
+        .form-status {
+            margin: 0; font-size: 0.95rem; text-align: center; min-height: 20px;
         }
 
         /* Responsive media queries */
@@ -364,13 +363,13 @@
     </style>
 </head>
 <body>
-    <!-- Video background -->
     <img src="background-poster.jpg" id="bg-video-fallback" alt="" style="display: none;">
+    
     <video autoplay muted loop playsinline poster="background-poster.jpg" id="bg-video">
         <source src="background.mp4" type="video/mp4">
     </video>
 
-    <!-- ✅ NEW: FEEDBACK MODAL -->
+    <!-- FEEDBACK MODAL -->
     <div id="feedback-modal" class="feedback-modal">
         <div class="feedback-overlay" onclick="closeFeedback()"></div>
         <div class="feedback-box">
@@ -378,13 +377,13 @@
                 <h3>📝 Send Feedback</h3>
                 <button class="close-feedback" onclick="closeFeedback()">✕</button>
             </div>
-            <form id="feedback-form" action="https://formspree.io/f/YOUR_FORMSPREE_ID" method="POST">
-                <input type="text" name="name" placeholder="Your Name *" required>
+            <form id="my-form" action="https://formspree.io/f/xkowpdnv" method="POST">
                 <input type="email" name="email" placeholder="Your Email *" required>
+                <input type="text" name="name" placeholder="Your Name (optional)">
                 <textarea name="message" placeholder="Your feedback, suggestions, or bug reports..." rows="6" required></textarea>
-                <button type="submit" class="feedback-submit">Send Feedback 🚀</button>
+                <button id="my-form-button" type="submit" class="feedback-submit">Send Feedback 🚀</button>
+                <p id="my-form-status" class="form-status"></p>
             </form>
-            <p class="feedback-success">Feedback Submitted Successfully! 🎉</p>
         </div>
     </div>
 
@@ -397,7 +396,6 @@
             <div class="logo-text"><span class="part1">Tool</span>ify</div>
         </div>
         
-        <!-- ✅ NEW: FEEDBACK LINK ADDED -->
         <div onclick="openFeedback()" class="side-link"><span>📝</span> Feedback</div>
         <div onclick="enterAsGuest();" class="side-link"><span>🛠️</span> Tools</div>
         <a href="privacy.html" class="side-link" target="_blank" rel="noopener"><span>📜</span> Privacy Policy</a>
@@ -483,7 +481,7 @@
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // ✅ NEW FEEDBACK FUNCTIONS
+        // FEEDBACK FUNCTIONS
         window.openFeedback = () => {
             document.getElementById('feedback-modal').classList.add('active');
             document.body.style.overflow = 'hidden';
@@ -495,21 +493,38 @@
             document.body.style.overflow = '';
         };
 
-        // ✅ FEEDBACK FORM HANDLER
-        document.getElementById('feedback-form').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const submitBtn = this.querySelector('.feedback-submit');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Submitting...';
-            
-            setTimeout(() => {
-                this.style.display = 'none';
-                document.querySelector('.feedback-success').style.display = 'block';
-                setTimeout(() => {
-                    closeFeedback();
-                }, 2000);
-            }, 1500);
-        });
+        // FORMSPIRE FORM HANDLER
+        var form = document.getElementById("my-form");
+        async function handleSubmit(event) {
+            event.preventDefault();
+            var status = document.getElementById("my-form-status");
+            var data = new FormData(event.target);
+            fetch(event.target.action, {
+                method: form.method,
+                body: data,
+                headers: { 'Accept': 'application/json' }
+            }).then(response => {
+                if (response.ok) {
+                    status.innerHTML = "Thanks for your submission! 🎉";
+                    status.style.color = "var(--primary)";
+                    form.reset();
+                    setTimeout(() => closeFeedback(), 2000);
+                } else {
+                    response.json().then(data => {
+                        if (Object.hasOwn(data, 'errors')) {
+                            status.innerHTML = data["errors"].map(error => error["message"]).join(", ");
+                        } else {
+                            status.innerHTML = "Oops! There was a problem submitting your form";
+                        }
+                        status.style.color = "#ff4444";
+                    });
+                }
+            }).catch(error => {
+                status.innerHTML = "Oops! There was a problem submitting your form";
+                status.style.color = "#ff4444";
+            });
+        }
+        form.addEventListener("submit", handleSubmit);
 
         // Video handling
         const video = document.getElementById('bg-video');
