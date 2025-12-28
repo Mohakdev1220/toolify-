@@ -78,7 +78,7 @@
         header {
             width: 100%; padding: 25px 40px;
             display: flex; justify-content: flex-end; align-items: center;
-            height: 80px;
+            height: 80px; position: sticky; top: 0; z-index: 1000;
         }
 
         #landing-page {
@@ -94,17 +94,13 @@
 
         /* AUTH BUTTONS */
         #main-auth-ui {
-            display: flex;
-            gap: 15px;
-            justify-content: center;
-            align-items: center;
-            min-height: 60px;
+            display: flex; gap: 15px; justify-content: center; align-items: center; min-height: 60px;
         }
 
         .btn {
-            padding: 14px 30px; border-radius: 12px; cursor: pointer;
+            padding: 12px 25px; border-radius: 10px; cursor: pointer;
             font-weight: 600; transition: 0.3s; border: 1px solid var(--border);
-            text-decoration: none; font-size: 1rem; display: inline-block;
+            text-decoration: none; font-size: 0.9rem; display: inline-block;
         }
         .btn-primary { background: var(--primary); color: #000; border: none; }
         .btn-primary:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(0, 242, 255, 0.4); }
@@ -140,13 +136,14 @@
             z-index: 2000; box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
             transition: 0.4s;
         }
-        .yt-floating-btn:hover { transform: scale(1.1); }
-
+        
         footer { padding: 40px; text-align: center; font-size: 0.7rem; color: rgba(255,255,255,0.3); letter-spacing: 2px; }
 
-        /* Helpers */
         .show-page { display: block !important; opacity: 1 !important; transform: translateY(0) !important; }
         .hide-page { display: none !important; }
+        
+        .auth-profile-wrap { display: flex; align-items: center; gap: 15px; }
+        .user-img { width: 38px; height: 38px; border-radius: 50%; border: 2px solid var(--primary); }
     </style>
 </head>
 <body>
@@ -160,11 +157,9 @@
             <img src="logo.png" alt="L" class="logo-img">
             <div class="logo-text"><span class="part1">Tool</span>ify</div>
         </div>
-        
         <div onclick="enterAsGuest()" class="side-link"><span>🛠️</span> Tools</div>
         <a href="privacy.html" class="side-link"><span>📜</span> Privacy Policy</a>
         <a href="terms.html" class="side-link"><span>⚖️</span> Terms & Conditions</a>
-        
         <div id="add-account-container">
             <div onclick="signIn()" class="side-link" style="color: var(--primary);"><span>➕</span> Add Another Account</div>
         </div>
@@ -178,7 +173,6 @@
         <section id="landing-page">
             <h1 class="hero-title"><span class="part1">Tool</span>ify</h1>
             <p class="tagline">The futuristic workspace for digital creators.</p>
-            
             <div id="main-auth-ui">
                 </div>
         </section>
@@ -236,21 +230,25 @@
 
         onAuthStateChanged(auth, (user) => {
             const mainAuthUI = document.getElementById('main-auth-ui');
-            const addAccountSide = document.getElementById('add-account-container');
             const authHeader = document.getElementById('auth-header-area');
+            const addAccountSide = document.getElementById('add-account-container');
 
             if (user) {
+                // USER LOGGED IN
                 enterAsGuest();
-                mainAuthUI.innerHTML = `<button class="btn btn-logout" onclick="logout()">Sign Out</button>`;
-                addAccountSide.style.display = 'block'; 
-                authHeader.innerHTML = `<img src="${user.photoURL}" style="width:40px; border-radius:50%; border:2px solid var(--primary); box-shadow: 0 0 10px var(--primary);">`;
-            } else {
-                mainAuthUI.innerHTML = `
-                    <button class="btn btn-primary" onclick="signIn()">Sign In with Google</button>
-                    <button class="btn btn-guest" onclick="enterAsGuest()">Guest Mode</button>
+                mainAuthUI.innerHTML = ''; // Clear landing buttons
+                authHeader.innerHTML = `
+                    <div class="auth-profile-wrap">
+                        <img src="${user.photoURL}" class="user-img">
+                        <button class="btn btn-logout" onclick="logout()">Sign Out</button>
+                    </div>
                 `;
+                addAccountSide.style.display = 'block'; 
+            } else {
+                // GUEST OR LOGGED OUT
+                authHeader.innerHTML = `<button class="btn btn-primary" onclick="signIn()">Sign In with Google</button>`;
+                mainAuthUI.innerHTML = `<button class="btn btn-guest" onclick="enterAsGuest()">Guest Mode</button>`;
                 addAccountSide.style.display = 'none';
-                authHeader.innerHTML = '';
             }
         });
     </script>
