@@ -58,19 +58,31 @@
 
         /* FIXED YOUTUBE FLOATING STYLE */
         .yt-floating-btn {
-            position: fixed; bottom: 30px; right: 30px;
-            background: var(--yt-red); color: white;
-            padding: 10px 20px; border-radius: 50px;
-            display: flex; align-items: center; justify-content: center; gap: 10px;
-            text-decoration: none; font-weight: bold; z-index: 2000;
-            box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
-            transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        .yt-floating-btn:hover {
-            transform: scale(1.05) translateY(-5px);
-            box-shadow: 0 15px 40px rgba(255, 0, 0, 0.5);
-        }
+    position: fixed; 
+    bottom: 30px; 
+    right: 30px;
+    background: #FF0000; /* Replaced variable with standard YT red for safety */
+    color: white;
+    
+    /* To make it a perfect circle around the icon */
+    width: 60px; 
+    height: 60px; 
+    border-radius: 50%; 
+    
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    
+    text-decoration: none; 
+    z-index: 2000;
+    box-shadow: 0 10px 30px rgba(255, 0, 0, 0.3);
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
 
+.yt-floating-btn:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 15px 40px rgba(255, 0, 0, 0.5);
+}
         #landing-page {
             height: 100vh; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; text-align: center; transition: 0.8s ease;
@@ -138,8 +150,7 @@
     <a href="https://www.youtube.com/@MOHAKCHOUBEY" target="_blank" class="yt-floating-btn">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
             <path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/>
-        </svg>
-        <span>  </span>
+        </svg> 
     </a>
 
     <header>
