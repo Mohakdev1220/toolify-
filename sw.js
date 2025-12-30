@@ -1,12 +1,39 @@
-self.addEventListener('install', e=>{
-    self.skipWaiting();
+const CACHE_NAME = "pwa-cache-v1";
+const OFFLINE_URL = "/";
+
+self.addEventListener("install", event => {
+  self.skipWaiting();
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll([
+        "/",
+        "/index.html"
+      ]);
+    })
+  );
 });
 
-self.addEventListener('activate', e=>{
-    clients.claim();
+self.addEventListener("activate", event => {
+  clients.claim();
 });
 
-self.addEventListener('notificationclick', e=>{
-    e.notification.close();
-    e.waitUntil(clients.openWindow('/')); // Opens your page if notification clicked
+self.addEventListener("fetch", event => {
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        const responseClone = response.clone();
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, responseClone);
+        });
+        return response;
+      })
+      .catch(() => caches.match(event.request))
+  );
+});
+
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+  event.waitUntil(
+    clients.openWindow("/")
+  );
 });
